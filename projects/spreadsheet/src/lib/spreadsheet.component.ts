@@ -1,7 +1,7 @@
 // External modules
 import { Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, NgZone, OnDestroy, OnInit, Output, QueryList, Renderer2, ViewChild, ViewChildren } from "@angular/core";
-import { debounceTime } from "rxjs/operators";
-import { Observable, Subject } from "rxjs";
+import { fromEvent, Observable, Subject, Subscription } from "rxjs";
+import { debounceTime, filter } from "rxjs/operators";
 
 // Interfaces
 import { ISpreadsheetRow } from "./interfaces/row.interface";
@@ -76,6 +76,10 @@ export class SpreadsheetComponent implements OnInit, OnDestroy {
 	// Generate column function
 	private _generateColumnFn: ISpreadsheetGenerateColumnFn;
 
+	// Track functions
+	private _trackRowsByFn: (index: number, item: ISpreadsheetRow) => void = (index: number, _) => index;
+	private _trackColumnsByFn: (index: number, item: ISpreadsheetColumn) => void = (index: number, _) => index;
+
 	// Spreadsheet data
 	@Input("data")
 	public data: ISpreadsheetData<any> = [];
@@ -89,8 +93,9 @@ export class SpreadsheetComponent implements OnInit, OnDestroy {
 			this._columnsMode = value.mode;
 		}
 
-		// Assign function
+		// Assign functions
 		this._generateColumnFn = value.generateColumnFn;
+		this._trackColumnsByFn = value.trackBy || this._trackColumnsByFn;
 
 		// Check for columns
 		if (value.columns) {
@@ -117,8 +122,9 @@ export class SpreadsheetComponent implements OnInit, OnDestroy {
 			this._rowsMode = value.mode;
 		}
 
-		// Assign function
+		// Assign functions
 		this._generateRowFn = value.generateRowFn;
+		this._trackRowsByFn = value.trackBy || this._trackRowsByFn;
 
 		// Check for rows
 		if (value.rows) {
@@ -152,6 +158,14 @@ export class SpreadsheetComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Track rows by function
+	 * @description Function to track rows
+	 */
+	public get trackRowsByFn(): (index: number, item: ISpreadsheetRow) => void {
+		return this._trackRowsByFn;
+	}
+
+	/**
 	 * Columns
 	 * @description Columns getter
 	 */
@@ -160,19 +174,11 @@ export class SpreadsheetComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Hovered row index
-	 * @description Hovered row index getter
+	 * Track columns by function
+	 * @description Function to track columns
 	 */
-	public get hoveredRowIndex(): number {
-		return this._hoveredRowIndex;
-	}
-
-	/**
-	 * Hovered column index
-	 * @description Hovered column index getter
-	 */
-	public get hoveredColumnIndex(): number {
-		return this._hoveredColumnIndex;
+	public get trackColumnsByFn(): (index: number, item: ISpreadsheetRow) => void {
+		return this._trackColumnsByFn;;
 	}
 
 	/**
@@ -343,10 +349,6 @@ export class SpreadsheetComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	// Hovered indexes
-	private _hoveredRowIndex: number = undefined;
-	private _hoveredColumnIndex: number = undefined;
-
 	// Selected indexes
 	private _selectedRowIndex: number = undefined;
 	private _selectedColumnIndex: number = undefined;
@@ -366,6 +368,11 @@ export class SpreadsheetComponent implements OnInit, OnDestroy {
 	private documentShiftListener: () => void;
 	private documentTabListener: () => void;
 	private documentShiftTabListener: () => void;
+
+	// Document click subscription
+	private documentClickSubscription: Subscription;
+	private documentShiftSubscription: Subscription;
+	private documentTabSubscription: Subscription;
 
 	// Is keys active flags
 	private isShiftKeyActive: boolean = false;
@@ -391,14 +398,25 @@ export class SpreadsheetComponent implements OnInit, OnDestroy {
 	public ngOnInit(): void {
 		// Run outside angular zone
 		this.ngZone.runOutsideAngular(() => {
-			// Register to document click
-			this.documentClickListener = this.renderer.listen("document", "click", (event: MouseEvent) => this.handleDocumentClick(event) as any);
-			// Register to shift key
-			this.documentShiftListener = this.renderer.listen("document", "keydown.shift", (event: KeyboardEvent) => this.handleDocumentShiftKeydown(event) as any);
-			// Register to tab key
-			this.documentTabListener = this.renderer.listen("document", "keydown.tab", (event: KeyboardEvent) => this.handleDocumentTabKeydown(event) as any);
-			// Register to shift tab key
-			this.documentTabListener = this.renderer.listen("document", "keydown.shift.tab", (event: KeyboardEvent) => this.handleDocumentShiftTabKeydown(event) as any);
+			// Subscribe to window click
+			this.documentClickSubscription = fromEvent(window, "click").subscribe((event: MouseEvent) => this.handleDocumentClick(event));
+			// Subscribe to shift keydown
+			this.documentShiftSubscription = fromEvent(window, "keydown")
+				// Filter Shift key
+				.pipe((filter((event: KeyboardEvent) => event.key === "Shift")))
+				// Only when shift flag is inactive
+				.pipe((filter((_) => !this.isShiftKeyActive)))
+				// Subscribe
+				.subscribe((event: KeyboardEvent) => this.handleDocumentShiftKeydown(event));
+
+			// Subscribe to tab keydown
+			this.documentTabSubscription = fromEvent(window, "keydown")
+				// Filter Tab key
+				.pipe((filter((event: KeyboardEvent) => event.key === "Tab")))
+				// Only when tab flag is inactive
+				.pipe((filter((_) => !this.isTabKeyActive)))
+				// Subscribe
+				.subscribe((event: KeyboardEvent) => this.handleDocumentTabKeydown(event));
 		});
 
 		// Register to focus change
@@ -417,6 +435,11 @@ export class SpreadsheetComponent implements OnInit, OnDestroy {
 		this.documentTabListener && this.documentTabListener();
 		// Document shift tab listener
 		this.documentShiftTabListener && this.documentShiftTabListener();
+
+		// Unsubscribe
+		this.documentClickSubscription && this.documentClickSubscription.unsubscribe();
+		this.documentTabSubscription && this.documentTabSubscription.unsubscribe();
+		this.documentShiftSubscription && this.documentShiftSubscription.unsubscribe();
 	}
 
 	/**
@@ -442,34 +465,6 @@ export class SpreadsheetComponent implements OnInit, OnDestroy {
 
 		// Emit focus change
 		this.focusChangeSource.next();
-	}
-
-	/**
-	 * On cell mouse enter
-	 * @param event 
-	 * @param rowIndex 
-	 * @param columnIndex 
-	 */
-	public onCellMouseEnter(event: Event, rowIndex: number, columnIndex: number): void {
-		// Prevent event propagation
-		event.stopPropagation();
-
-		// Set hovered indexes
-		this.setHoveredIndexes(rowIndex, columnIndex);
-	}
-
-	/**
-	 * On cell mouse leave
-	 * @param event 
-	 * @param rowIndex 
-	 * @param columnIndex 
-	 */
-	public onCellMouseLeave(event: Event, rowIndex: number, columnIndex: number): void {
-		// Prevent event propagation
-		event.stopPropagation();
-
-		// Reset hovered indexes
-		this.resetHoveredIndexes();
 	}
 
 	/**
@@ -528,22 +523,15 @@ export class SpreadsheetComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Set hovered indexes
-	 * @param rowIndex 
-	 * @param columnIndex 
+	 * Is reset required
+	 * @description Check if reset is required
 	 */
-	private async setHoveredIndexes(rowIndex: number, columnIndex: number): Promise<void> {
-		// Set indexes
-		this._hoveredRowIndex = rowIndex;
-		this._hoveredColumnIndex = columnIndex;
-	}
-
-	/**
-	 * Reset hovered index
-	 */
-	private async resetHoveredIndexes(): Promise<void> {
-		// Reset indexes
-		this._hoveredColumnIndex = this._hoveredRowIndex = undefined;
+	private isResetRequired(): boolean {
+		return !!this._selectedCell
+			|| (typeof this._selectedColumnIndex !== "undefined")
+			|| (typeof this._selectedRowIndex !== "undefined")
+			|| this._selectedColumnsIndexes.length > 0
+			|| this._selectedRowsIndexes.length > 0;
 	}
 
 	/**
@@ -570,7 +558,7 @@ export class SpreadsheetComponent implements OnInit, OnDestroy {
 
 		// Reset indexes
 		this._selectedColumnIndex = this._selectedRowIndex = undefined;
-		this._selectedColumnsIndexes = this._selectedColumnsIndexes = [];
+		this._selectedColumnsIndexes = this._selectedRowsIndexes = [];
 
 		// Reset cell
 		this._selectedCell = null;
@@ -587,6 +575,12 @@ export class SpreadsheetComponent implements OnInit, OnDestroy {
 			return;
 		}
 
+		// Check if reset is required
+		if (!this.isResetRequired()) {
+			// Do nothing
+			return;
+		}
+
 		// Reset select
 		this.ngZone.run(() => this.resetSelect());
 	}
@@ -599,32 +593,18 @@ export class SpreadsheetComponent implements OnInit, OnDestroy {
 		// Set shift key active flag
 		this.isShiftKeyActive = true;
 
-		// Register to shift keyup
-		const documentShiftListener = this.renderer.listen("document", "keyup.shift", (event: KeyboardEvent) => {
-			// Remove listener
-			documentShiftListener();
+		// Subscribe to shift keyup
+		const subscription = fromEvent(document, "keyup")
+			// Check for Shift key
+			.pipe(filter((event: KeyboardEvent) => event.key === "Shift"))
+			// Subscribe
+			.subscribe((event) => {
+				// Unsubscribe
+				subscription && subscription.unsubscribe();
 
-			// Reset flag
-			this.isShiftKeyActive = false;
-		});
-	}
-
-	/**
-	 * Handle document shift tab keydown
-	 * @param event 
-	 */
-	private async handleDocumentShiftTabKeydown(event: KeyboardEvent): Promise<void> {
-		// Set tab key active flag
-		this.isTabKeyActive = true;
-
-		// Register to tab keyup
-		const documentTabListener = this.renderer.listen("document", "keyup.shift.tab", (event: KeyboardEvent) => {
-			// Remove listener
-			documentTabListener();
-
-			// Reset flag
-			this.isTabKeyActive = false;
-		});
+				// Reset flag
+				this.isShiftKeyActive = false;
+			});
 	}
 
 	/**
@@ -635,14 +615,18 @@ export class SpreadsheetComponent implements OnInit, OnDestroy {
 		// Set tab key active flag
 		this.isTabKeyActive = true;
 
-		// Register to tab keyup
-		const documentTabListener = this.renderer.listen("document", "keyup.tab", (event: KeyboardEvent) => {
-			// Remove listener
-			documentTabListener();
+		// Subscribe to Tab keyup
+		const subscription = fromEvent(document, "keyup")
+			// Check for Tab key
+			.pipe(filter((event: KeyboardEvent) => event.key === "Tab"))
+			// Subscribe
+			.subscribe((event) => {
+				// Unsubscribe
+				subscription && subscription.unsubscribe();
 
-			// Reset flag
-			this.isTabKeyActive = false;
-		});
+				// Reset flag
+				this.isTabKeyActive = false;
+			});
 	}
 
 	/**

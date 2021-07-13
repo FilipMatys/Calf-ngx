@@ -7,6 +7,7 @@ import { SpreadsheetTextAlign } from "../../enums/text-align.enum";
 import { SpreadsheetVerticalAlign } from "../../enums/vertical-align.enum";
 
 // Interfaces
+import { ISpreadsheetRow } from "../../interfaces/row.interface";
 import { ISpreadsheetColumn } from "../../interfaces/column.interface";
 import { ISpreadsheetFormatterFunction } from "../../interfaces/formatter-function.interface";
 import { ISpreadsheetStyle } from "../../interfaces/style.interface";
@@ -26,6 +27,9 @@ export class SpreadsheetCellComponent<TRecord = any> {
 
     @Input("column")
     private _column: ISpreadsheetColumn;
+
+    @Input("row")
+    private _row: ISpreadsheetRow;
 
     @Input("record")
     private _record: TRecord;
@@ -93,6 +97,24 @@ export class SpreadsheetCellComponent<TRecord = any> {
     @HostBinding("class.ngx-spreadsheet-cell--vertical-align-top")
     public get isVerticalAlignTop(): boolean {
         return this.style.verticalAlign === SpreadsheetVerticalAlign.TOP;
+    }
+
+    /**
+     * Is disabled
+     * @description Disabled flag
+     */
+    @HostBinding("ngx-spreadsheet-cell--disabled")
+    public get isDisabled(): boolean {
+        return this._column.isDisabled || this._row.isDisabled;
+    }
+
+    /**
+     * Is readonly
+     * @description Readonly flag
+     */
+     @HostBinding("ngx-spreadsheet-cell--readonly")
+    public get isReadonly(): boolean {
+        return this._column.isReadonly || this._row.isReadonly;
     }
 
     /**

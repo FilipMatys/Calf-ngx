@@ -2,8 +2,7 @@
     <thead class="ngx-spreadsheet-table__head">
         <tr class="ngx-spreadsheet-row ngx-spreadsheet-row--head">
             <th class="ngx-spreadsheet-column ngx-spreadsheet-column--first"></th>
-            <th *ngFor="let column of columns; let columnIndex = index" class="ngx-spreadsheet-column"
-                [class.ngx-spreadsheet-column--hover]="columnIndex === hoveredColumnIndex"
+            <th *ngFor="let column of columns; let columnIndex = index; trackBy:trackColumnsByFn" class="ngx-spreadsheet-column"
                 [class.ngx-spreadsheet-column--selected]="columnIndex === selectedColumnIndex"
                 [class.ngx-spreadsheet-column--disabled]="column.isDisabled"
                 [class.ngx-spreadsheet-column--readonly]="column.isReadonly">
@@ -11,25 +10,20 @@
         </tr>
     </thead>
     <tbody class="ngx-spreadsheet-table__body">
-        <tr *ngFor="let row of rows; let rowIndex = index"
-            class="ngx-spreadsheet-row ngx-spreadsheet-row--body"
-            [class.ngx-spreadsheet-row--hover]="rowIndex === hoveredRowIndex"
-            [class.ngx-spreadsheet-row--selected]="rowIndex === selectedRowIndex"
-            >
+        <tr *ngFor="let row of rows; let rowIndex = index; trackBy:trackRowsByFn" class="ngx-spreadsheet-row ngx-spreadsheet-row--body"
+            [class.ngx-spreadsheet-row--selected]="rowIndex === selectedRowIndex">
             <td class="ngx-spreadsheet-cell ngx-spreadsheet-cell--first">{{ row.label || (rowIndex + 1) }}</td>
-            <td ngxSpreadsheetCell *ngFor="let column of columns; let columnIndex = index" [rowIndex]="rowIndex"
-                [columnIndex]="columnIndex" [column]="columns[columnIndex]" [record]="data[rowIndex]"
-                (click)="onCellClick($event, rowIndex, columnIndex)"
-                (mouseenter)="onCellMouseEnter($event, rowIndex, columnIndex)"
-                (mouseleave)="onCellMouseLeave($event, rowIndex, columnIndex)" class="ngx-spreadsheet-cell"
-                [class.ngx-spreadsheet-cell--hover]="columnIndex === hoveredColumnIndex && rowIndex === hoveredRowIndex"
-                [class.ngx-spreadsheet-cell--disabled]="columns[columnIndex].isDisabled || rows[rowIndex].isDisabled"
-                [class.ngx-spreadsheet-cell--readonly]="columns[columnIndex].isReadonly || rows[rowIndex].isReadonly">
+            <td ngxSpreadsheetCell *ngFor="let column of columns; let columnIndex = index; trackBy:trackColumnsByFn" [rowIndex]="rowIndex"
+                [columnIndex]="columnIndex" [column]="columns[columnIndex]" [row]="rows[rowIndex]"
+                [record]="data[rowIndex]" (click)="onCellClick($event, rowIndex, columnIndex)"
+                class="ngx-spreadsheet-cell">
             </td>
         </tr>
     </tbody>
 
     <ngx-spreadsheet-selected *ngIf="selectedCell" [cell]="selectedCell">
-        <input tabindex="-1" #selectedInput [readonly]="columns[selectedColumnIndex].isReadonly || rows[selectedRowIndex].isReadonly" [disabled]="columns[selectedColumnIndex].isDisabled || rows[selectedRowIndex].isDisabled" (focus)="onSelectedInputFocus($event)" (blur)="onSelectedInputBlur($event)" [value]="selectedCell.value" class="ngx-spreadsheet-input" type="text">
+        <input tabindex="-1" #selectedInput [readonly]="selectedCell.isReadonly" [disabled]="selectedCell.isDisabled"
+            (focus)="onSelectedInputFocus($event)" (blur)="onSelectedInputBlur($event)" [value]="selectedCell.value"
+            class="ngx-spreadsheet-input" type="text">
     </ngx-spreadsheet-selected>
 </table>

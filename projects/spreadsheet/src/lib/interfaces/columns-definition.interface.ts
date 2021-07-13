@@ -36,4 +36,10 @@ export interface ISpreadsheetColumnsDefinition {
      * use
      */
     columns?: ISpreadsheetColumns;
+
+    /**
+     * Track by
+     * @description Track by function for columns
+     */
+    trackBy?: (index: number, item: ISpreadsheetColumn) => any;
 }

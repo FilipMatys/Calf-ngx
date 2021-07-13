@@ -35,4 +35,10 @@ export interface ISpreadsheetRowsDefinition {
      * when CUSTOM mode is set
      */
     rows?: ISpreadsheetRows;
+
+    /**
+     * Track by
+     * @description Track by function for rows
+     */
+     trackBy?: (index: number, item: ISpreadsheetRow) => any;
 }
