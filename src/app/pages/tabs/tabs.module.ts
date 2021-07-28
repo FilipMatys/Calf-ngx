@@ -5,7 +5,7 @@ import { RouterModule } from "@angular/router";
 import { TabsModule } from "tabs";
 
 // Pages
-import { TabsPage } from "./tabs,page";
+import { TabsPage } from "./tabs.page";
 
 @NgModule({
     imports: [

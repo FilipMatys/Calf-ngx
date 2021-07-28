@@ -1,8 +1,9 @@
 // External modules
-import { Component, ContentChildren, QueryList, AfterContentInit, Input, ViewChild, HostBinding } from '@angular/core';
+import { Component, ContentChildren, QueryList, AfterContentInit, Input, ViewChild, HostBinding, EventEmitter, Output } from '@angular/core';
 
 // Directives
 import { TabDirective } from "./directives/tab/tab.directive";
+import { IActiveTabChangeEvent } from "./interfaces/active-tab-change-event.interface";
 
 // Outlets
 import { TabsContentOutlet } from "./outlets/content/content.outlet";
@@ -15,6 +16,9 @@ export class TabsComponent implements AfterContentInit {
 
 	@HostBinding("class.ngx-tabs")
 	public ngxTabs: boolean = true;
+
+	@Output("change")
+	public activeTabChange: EventEmitter<IActiveTabChangeEvent> = new EventEmitter<IActiveTabChangeEvent>();
 
 	@Input("tabs")
 	public set tabIdentifiers(tabs: string[]) {
@@ -83,6 +87,16 @@ export class TabsComponent implements AfterContentInit {
 		// Prevent event propagation
 		event.stopPropagation();
 
+		// Activate tab
+		this.activateTab(tab, index);
+	}
+
+	/**
+	 * Activate tab
+	 * @param tab 
+	 * @param index 
+	 */
+	private async activateTab(tab: TabDirective, index: number): Promise<void> {
 		// Check if tab is disabled
 		if (tab.isDisabled) {
 			// Do nothing
@@ -95,17 +109,28 @@ export class TabsComponent implements AfterContentInit {
 			return;
 		}
 
+		// Keep from index
+		const fromIndex = this._activeIndex;
+
 		// Set active index
 		this._activeIndex = index;
 
 		// Get content view ref
-		let cVRef = this.contentOutlet.viewContainerRef;
+		const cVRef = this.contentOutlet.viewContainerRef;
 
 		// Clear
 		cVRef.clear();
 
-		// Create view
-		cVRef.createEmbeddedView(tab.content);
+		// Create view for given tab if content is set
+		tab.content && cVRef.createEmbeddedView(tab.content);
+
+		// Emit change
+		this.activeTabChange.emit({
+			fromIndex: fromIndex,
+			fromTab: this.tabDefinitions.find((_, tIndex) => tIndex === fromIndex),
+			toIndex: index,
+			toTab: tab
+		});
 	}
 
 	/**
@@ -134,7 +159,7 @@ export class TabsComponent implements AfterContentInit {
 		}
 
 		// Get content view ref
-		let cVRef = this.contentOutlet.viewContainerRef;
+		const cVRef = this.contentOutlet.viewContainerRef;
 
 		// Create view
 		cVRef.clear();
@@ -144,7 +169,10 @@ export class TabsComponent implements AfterContentInit {
 			return;
 		}
 
+		// Get tab content
+		const content = this.tabs[this._activeIndex].content;
+
 		// Create view
-		cVRef.createEmbeddedView(this.tabs[this._activeIndex].content);
+		content && cVRef.createEmbeddedView(content);
 	}
 }

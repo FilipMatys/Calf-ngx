@@ -3,14 +3,12 @@
     <p>Tabs component</p>
 </header>
 
-<ngx-tabs>
+<ngx-tabs (change)="onTabChange($event)">
     <ng-container ngxTab="general">
         <ng-container *ngxTabLabel>Tab1</ng-container>
-        <ng-container *ngxTabContent>Tab1 Content</ng-container>
     </ng-container>
-    <ng-container [visible]="isTabVisible" ngxTab="visibile">
+    <ng-container ngxTab="visibile">
         <ng-container *ngxTabLabel>Tab2</ng-container>
-        <ng-container *ngxTabContent>Tab2 Content</ng-container>
     </ng-container>
 </ngx-tabs>
 

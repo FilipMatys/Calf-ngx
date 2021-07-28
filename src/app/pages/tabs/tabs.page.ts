@@ -1,5 +1,6 @@
 // External modules
 import { Component } from "@angular/core";
+import { IActiveTabChangeEvent } from "tabs";
 
 @Component({
     selector: "page-tabs",
@@ -26,5 +27,9 @@ export class TabsPage {
     private toggleTab(): void {
         // Toggle tab
         this.isTabVisible = !this.isTabVisible;
+    }
+
+    public onTabChange(event: IActiveTabChangeEvent): void {
+        console.log(event);
     }
 }
