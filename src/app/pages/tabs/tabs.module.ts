@@ -2,6 +2,9 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
+import { FormsModule } from "@angular/forms";
+
+// Module
 import { TabsModule } from "tabs";
 
 // Pages
@@ -9,6 +12,7 @@ import { TabsPage } from "./tabs.page";
 
 @NgModule({
     imports: [
+        FormsModule,
         CommonModule,
         TabsModule,
         RouterModule.forChild([
@@ -20,4 +24,4 @@ import { TabsPage } from "./tabs.page";
     ],
     declarations: [TabsPage]
 })
-export class TabsPageModule {}
+export class TabsPageModule { }

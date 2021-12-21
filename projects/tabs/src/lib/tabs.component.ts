@@ -17,7 +17,7 @@ export class TabsComponent implements AfterContentInit {
 	@HostBinding("class.ngx-tabs")
 	public ngxTabs: boolean = true;
 
-	@Output("change")
+	@Output("tabChange")
 	public activeTabChange: EventEmitter<IActiveTabChangeEvent> = new EventEmitter<IActiveTabChangeEvent>();
 
 	@Input("tabs")
@@ -41,12 +41,21 @@ export class TabsComponent implements AfterContentInit {
 			return;
 		}
 
-		// Set active index
-		this._activeIndex = index;
+		// Check for tabs
+		if (!(this.tabs || []).length) {
+			// Set active index
+			this._activeIndex = index;
 
-		// Rebuild
-		this.rebuild();
+			// Do nothing else
+			return;
+		}
+
+		// Activate tab
+		this.activateTab(this.tabs[index], index);
 	}
+
+	@Output("indexChange")
+	public activeIndexChange: EventEmitter<number> = new EventEmitter<number>();
 
 	/**
 	 * Active index getter
@@ -89,6 +98,9 @@ export class TabsComponent implements AfterContentInit {
 
 		// Activate tab
 		this.activateTab(tab, index);
+
+		// Emit change
+		this.activeIndexChange.next(index);
 	}
 
 	/**

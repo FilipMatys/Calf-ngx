@@ -3,12 +3,16 @@
     <p>Tabs component</p>
 </header>
 
-<ngx-tabs (change)="onTabChange($event)">
+<input [(ngModel)]="activeTabIndex" name="index" id="index" type="number">
+
+<ngx-tabs [(index)]="activeTabIndex" (tabChange)="onTabChange($event)">
     <ng-container ngxTab="general">
         <ng-container *ngxTabLabel>Tab1</ng-container>
+        <ng-container *ngxTabContent>Tab1 content</ng-container>
     </ng-container>
     <ng-container ngxTab="visibile">
         <ng-container *ngxTabLabel>Tab2</ng-container>
+        <ng-container *ngxTabContent>Tab2 content</ng-container>
     </ng-container>
 </ngx-tabs>
 

@@ -12,6 +12,8 @@ export class TabsPage {
     // Tag visibility toggle
     public isTabVisible: boolean;
 
+    public activeTabIndex: number = 0;
+
     /**
      * On toggle tab click
      * @param event 
