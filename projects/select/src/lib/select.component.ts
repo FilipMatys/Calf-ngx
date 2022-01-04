@@ -915,6 +915,12 @@ export class SelectComponent implements ControlValueAccessor, OnInit {
 				this.handleEnterKeydownClosed(event);
 				break;
 
+			// Delete
+			case KEY_CODES.DELETE:
+				// Handle delete
+				this.handleDeleteKeydownClosed(event);
+				break;
+
 			// Default
 			default:
 				// Handle default
@@ -922,6 +928,24 @@ export class SelectComponent implements ControlValueAccessor, OnInit {
 				break;
 
 		}
+	}
+
+	/**
+	 * Handle delete keydown closed
+	 * @param event 
+	 */
+	private handleDeleteKeydownClosed(event: KeyboardEvent): void {
+		// Check for allow clear
+		if (!this.config.allowClear) {
+			// Nothing to do
+			return;
+		}
+
+		// Prevent default
+		event.preventDefault();
+
+		// Clear value
+		this.value = null;
 	}
 
 	/**
