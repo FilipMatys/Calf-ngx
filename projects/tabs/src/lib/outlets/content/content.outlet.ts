@@ -1,8 +1,8 @@
 // External modules
 import { Directive, ViewContainerRef } from "@angular/core";
 
-@Directive({ selector: "[contentOutlet]" })
-export class TabsContentOutlet {
+@Directive({ selector: "[ngxTabContentOutlet]", exportAs: "ngxTabContentOutlet" })
+export class TabContentOutlet {
     
     /**
      * Constructor

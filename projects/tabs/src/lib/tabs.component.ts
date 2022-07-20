@@ -6,7 +6,7 @@ import { TabDirective } from "./directives/tab/tab.directive";
 import { IActiveTabChangeEvent } from "./interfaces/active-tab-change-event.interface";
 
 // Outlets
-import { TabsContentOutlet } from "./outlets/content/content.outlet";
+import { TabContentOutlet } from "./outlets/content/content.outlet";
 
 @Component({
 	selector: 'ngx-tabs',
@@ -68,8 +68,8 @@ export class TabsComponent implements AfterContentInit {
 	private _activeIndex: number = 0;
 
 	// Content outlet
-	@ViewChild(TabsContentOutlet, { static: true })
-	public contentOutlet: TabsContentOutlet;
+	@Input("outlet")
+	public contentOutlet: TabContentOutlet;
 
 	// List of tab definitions
 	@ContentChildren(TabDirective)
