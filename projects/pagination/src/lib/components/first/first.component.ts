@@ -1,5 +1,5 @@
 // External modules
-import { Component, EventEmitter, Output, HostListener } from "@angular/core";
+import { Component, EventEmitter, Output, HostListener, HostBinding } from "@angular/core";
 
 @Component({
     selector: "ngx-pagination-first",
@@ -12,6 +12,12 @@ export class PaginationFirstComponent {
         // Emit first click
         this.firstClick.emit(event);
     }
+
+    @HostBinding("class.ngx-pagination-item")
+    public defaultClass: boolean = true;
+
+    @HostBinding("class.ngx-pagination-item--first")
+    public modifierClass: boolean = true;
 
     @Output("firstClick")
     public firstClick: EventEmitter<Event> = new EventEmitter();

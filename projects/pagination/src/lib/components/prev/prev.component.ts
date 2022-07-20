@@ -1,5 +1,5 @@
 // External modules
-import { Component, HostListener, Output, EventEmitter } from "@angular/core";
+import { Component, HostListener, Output, EventEmitter, HostBinding } from "@angular/core";
 
 @Component({
     selector: "ngx-pagination-prev",
@@ -13,6 +13,12 @@ export class PaginationPrevComponent {
         // Propagate event
         this.prevClick.emit(event);
     }
+
+    @HostBinding("class.ngx-pagination-item")
+    public defaultClass: boolean = true;
+
+    @HostBinding("class.ngx-pagination-item--prev")
+    public modifierClass: boolean = true;
 
     @Output("prevClick")
     public prevClick: EventEmitter<Event> = new EventEmitter<Event>();

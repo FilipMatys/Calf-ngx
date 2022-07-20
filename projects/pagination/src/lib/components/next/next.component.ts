@@ -1,5 +1,5 @@
 // External components
-import { Component, HostListener, EventEmitter, Output } from "@angular/core";
+import { Component, HostListener, EventEmitter, Output, HostBinding } from "@angular/core";
 
 @Component({
     selector: "ngx-pagination-next",
@@ -13,6 +13,12 @@ export class PaginationNextComponent {
         // Propagate event
         this.nextClick.emit(event);
     }
+
+    @HostBinding("class.ngx-pagination-item")
+    public defaultClass: boolean = true;
+
+    @HostBinding("class.ngx-pagination-item--next")
+    public modifierClass: boolean = true;
 
     @Output("nextClick")
     public nextClick: EventEmitter<Event> = new EventEmitter<Event>();
