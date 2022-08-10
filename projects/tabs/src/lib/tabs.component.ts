@@ -127,6 +127,12 @@ export class TabsComponent implements AfterContentInit {
 		// Set active index
 		this._activeIndex = index;
 
+		// Check if outlet is set
+		if (!this.contentOutlet) {
+			// Nothing to do
+			return;
+		}
+
 		// Get content view ref
 		const cVRef = this.contentOutlet.viewContainerRef;
 
@@ -168,6 +174,12 @@ export class TabsComponent implements AfterContentInit {
 		else {
 			// Assign tab definitions
 			this.tabs = this.tabDefinitions.toArray();
+		}
+
+		// Check if outlet is set
+		if (!this.contentOutlet) {
+			// Nothing to do
+			return;
 		}
 
 		// Get content view ref
