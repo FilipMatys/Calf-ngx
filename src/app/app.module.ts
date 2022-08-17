@@ -26,10 +26,10 @@ import { AppComponent } from './app.component';
 			// 	path: "form",
 			// 	loadChildren: () => import("./pages/form/form.module").then((m) => m.FormPageModule)
 			// },
-			// {
-			// 	path: "tabs",
-			// 	loadChildren: () => import("./pages/tabs/tabs.module").then((m) => m.TabsPageModule)
-			// },
+			{
+				path: "tabs",
+				loadChildren: () => import("./pages/tabs/tabs.module").then((m) => m.TabsPageModule)
+			},
 			// {
 			// 	path: "tree",
 			// 	loadChildren: () => import("./pages/tree/tree.module").then((m) => m.TreePageModule)

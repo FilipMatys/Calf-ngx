@@ -1,5 +1,5 @@
 // External modules
-import { Component, ContentChildren, QueryList, AfterContentInit, Input, ViewChild, HostBinding, EventEmitter, Output } from '@angular/core';
+import { Component, ContentChildren, QueryList, AfterContentInit, Input, HostBinding, EventEmitter, Output } from '@angular/core';
 
 // Directives
 import { TabDirective } from "./directives/tab/tab.directive";
@@ -82,8 +82,8 @@ export class TabsComponent implements AfterContentInit {
 	 * After content init hook
 	 */
 	public ngAfterContentInit() {
-		//Rebuild
-		this.rebuild();
+		// Rebuild
+		Promise.resolve(null).then(() => this.rebuild());
 	}
 
 	/**
