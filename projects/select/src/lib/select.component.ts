@@ -194,6 +194,12 @@ export class SelectComponent implements ControlValueAccessor, OnInit {
 	@HostBinding("class.ngx-select--open")
 	public isSelectionOpen: boolean = false;
 
+	// Select multi flag
+	@HostBinding("class.ngx-select--multi")
+	public get isSelectMulti(): boolean {
+		return !!this.config.multi;
+	}
+
 	// Closed flag
 	@HostBinding("class.ngx-select--closed")
 	public get isSelectionClosed(): boolean {
