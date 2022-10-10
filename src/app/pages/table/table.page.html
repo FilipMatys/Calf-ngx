@@ -6,6 +6,7 @@
     <button (click)="onAddRowClick($event)" class="tooolbar-button">
         Add row
     </button>
+    <button (click)="isExtraColumnsVisible = !isExtraColumnsVisible">Toggle columns</button>
 </div>
 <main #container>
     <div #spacer></div>
@@ -18,6 +19,18 @@
             <td class="ngx-table-footer" *ngxFooterDefinition>
                 Footer1
             </td>
+        </ng-container>
+
+        <ng-container *ngIf="isExtraColumnsVisible">
+            <ng-container ngxColumnDefinition="extra">
+                <th class="ngx-table-header" *ngxHeaderDefinition>Extra</th>
+                <td class="ngx-table-cell" *ngxCellDefinition="let item; let idx = index">
+                    {{ item.name }}
+                </td>
+                <td class="ngx-table-footer" *ngxFooterDefinition>
+                    FooterExtra
+                </td>
+            </ng-container>
         </ng-container>
 
         <ng-container ngxColumnDefinition="age">

@@ -18,10 +18,10 @@ import { AppComponent } from './app.component';
 			// 	path: "drawer",
 			// 	loadChildren: () => import("./pages/drawer/drawer.module").then((m) => m.DrawerPageModule)
 			// },
-			// {
-			// 	path: "table",
-			// 	loadChildren: () => import("./pages/table/table.module").then((m) => m.TablePageModule)
-			// },
+			{
+				path: "table",
+				loadChildren: () => import("./pages/table/table.module").then((m) => m.TablePageModule)
+			},
 			// {
 			// 	path: "form",
 			// 	loadChildren: () => import("./pages/form/form.module").then((m) => m.FormPageModule)

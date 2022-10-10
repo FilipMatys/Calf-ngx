@@ -351,16 +351,13 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 	 * @param header 
 	 */
 	private onSortChange(event: Event, header: TableHeaderComponent) {
-		// Get header index
-		let idx = this.headers.indexOf(header);
-
 		// Check for index
-		if (idx === -1) {
+		if (!header.column) {
 			return;
 		}
 
 		// Get identifier
-		let identifier = this.outputColumnDefinitions[idx].identifier;
+		const identifier = header.column.identifier;
 
 		// Check for multi
 		if (!this.config.sort.multi || !(event as any).ctrlKey) {

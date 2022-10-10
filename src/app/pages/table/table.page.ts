@@ -21,8 +21,8 @@ export class TablePage implements OnInit {
         trackRecordBy: (index, item) => item.age,
         allowRowClick: false,
         sort: {
-            allow: false,
-            multi: false,
+            allow: true,
+            multi: true,
             mapSetFn: () => [{}]
         }
     }
@@ -32,6 +32,9 @@ export class TablePage implements OnInit {
 
     // Items
     public items: any[] = [];
+
+    // Extra columns flag
+    public isExtraColumnsVisible: boolean = false;
 
     /**
      * On init hook
