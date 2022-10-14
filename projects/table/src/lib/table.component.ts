@@ -89,6 +89,15 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 		});
 	}
 
+	/**
+	 * Has footer definition flag
+	 * @description Whether table has at least one footer definition
+	 */
+	public get hasFooterDefinition(): boolean {
+		// Check if there is at least one footer definition within a column
+		return (this.outputColumnDefinitions || []).some((def) => !!def.footer);
+	}
+
 	// List of columns
 	private _columns: string[] = [];
 
