@@ -121,7 +121,7 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 
 	// Data
 	@Input("data")
-	private _data: any[] = [];
+	public data: any[] = [];
 
 	// List of items
 	private _items: any[] = [];
@@ -185,7 +185,7 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 
 	// Sort change
 	@Output("sortChange")
-	public sortChange: EventEmitter<ITableSortColumn[]> = new EventEmitter<ITableSortColumn[]>();
+	public sortChange: EventEmitter<any> = new EventEmitter<any>();
 
 	// Clickable class binding
 	@HostBinding("class.ngx-table--clickable")
@@ -270,11 +270,11 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 	 */
 	public ngDoCheck(): void {
 		// Check if data changed
-		if (this._iterableDiffer.diff(this._data)) {
+		if (this._iterableDiffer.diff(this.data)) {
 			// Check for virtual scroll config
 			if (!this._config.virtualScroll || !this._config.virtualScroll.allow) {
 				// Assign data
-				this._items = this._data;
+				this._items = this.data;
 			}
 			else {
 				// Emit scroll handler
@@ -427,7 +427,7 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 		const scrollHeight = this._scrollContainer.offsetHeight;
 
 		// Get total height needed for items (including header and footer)
-		const totalHeight: number = (this._data || []).length * this._config.virtualScroll.rowHeight + headHeight + footHeight;
+		const totalHeight: number = (this.data || []).length * this._config.virtualScroll.rowHeight + headHeight + footHeight;
 		// Get padding
 		const nodePadding: number = this._config.virtualScroll.paddingRowsCount;
 		// Get start node
@@ -493,7 +493,7 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 		// Check for sticky foot
 		if (this._config.virtualScroll.stickyFoot && this.footElementRef) {
 			// Get number of rendered items
-			const renderedCount = Math.min(visibleNodesCount, (this._data || []).length - startNode);
+			const renderedCount = Math.min(visibleNodesCount, (this.data || []).length - startNode);
 
 			// Calculate offset
 			const footOffsetY = Math.min((scrollPosition + scrollHeight) - (offsetY + headHeight + footHeight + renderedCount * this._config.virtualScroll.rowHeight));
@@ -507,7 +507,7 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 			// Run code inside Angular zone
 			this.ngZone.run(() => {
 				// Assign items
-				this._items = (this._data || []).slice(startNode, startNode + visibleNodesCount);
+				this._items = (this.data || []).slice(startNode, startNode + visibleNodesCount);
 
 				// Mark changes for check
 				this.changeDetectorRef.markForCheck();
