@@ -3,19 +3,24 @@
     <p>Toggle component</p>
 </header>
 
-<ngx-toggle>
+<ngx-toggle [indeterminate]="isIndeterminate">
     <div class="ngx-toggle-content--before">
         Before
     </div>
     <ng-container *ngxToggleActive>
-        <i class="material-icons">
+        <span class="material-symbols-outlined">
             check_box
-        </i>
+        </span>
     </ng-container>
     <ng-container *ngxToggleInactive>
-        <i class="material-icons">
+        <span class="material-symbols-outlined">
             check_box_outline_blank
-        </i>
+        </span>
+    </ng-container>
+    <ng-container *ngxToggleIndeterminate>
+        <span class="material-symbols-outlined">
+            indeterminate_check_box
+        </span>
     </ng-container>
     <div class="ngx-toggle-content--after">
         After

@@ -8,6 +8,7 @@ import { KEY_CODES } from "./constants/key-codes.const";
 // Directives
 import { ToggleActiveDirective } from "./directives/active.directive";
 import { ToggleInactiveDirective } from "./directives/inactive.directive";
+import { ToggleIndeterminateDirective } from "./directives/indeterminate.directive";
 
 @Component({
 	selector: "ngx-toggle",
@@ -58,8 +59,27 @@ export class ToggleComponent implements ControlValueAccessor {
 	@ContentChild(ToggleInactiveDirective, { read: TemplateRef })
 	public toggleInactiveTemplate: TemplateRef<any>;
 
+	// Indeterminate template
+	@ContentChild(ToggleIndeterminateDirective, { read: TemplateRef })
+	public toggleIndeterminateTemplate: TemplateRef<any>
+
 	@Input("value")
 	private _value: boolean = false;
+
+	@Input("indeterminate")
+	public set indeterminate(value: boolean) {
+		// Set flag
+		this._indeterminate = value;
+
+		// Normalize value
+		this._value = this._value && !this._indeterminate;
+	}
+
+	// Indeterminate getter
+	public get indeterminate(): boolean { return this._indeterminate }
+
+	// Indeterminate flag
+	private _indeterminate: boolean = false;
 
 	// Value getter
 	public get value(): boolean { return this._value }

@@ -46,10 +46,10 @@ import { AppComponent } from './app.component';
 			// 	path: "datepicker",
 			// 	loadChildren: () => import("./pages/datepicker/datepicker.module").then((m) => m.DatepickerPageModule)
 			// },
-			// {
-			// 	path: "toggle",
-			// 	loadChildren: () => import("./pages/toggle/toggle.module").then((m) => m.TogglePageModule)
-			// },
+			{
+				path: "toggle",
+				loadChildren: () => import("./pages/toggle/toggle.module").then((m) => m.TogglePageModule)
+			},
 			// {
 			// 	path: "spreadsheet",
 			// 	loadChildren: () => import("./pages/spreadsheet/spreadsheet.module").then((m) => m.SpreadsheetPageModule)

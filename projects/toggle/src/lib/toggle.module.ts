@@ -9,6 +9,7 @@ import { ToggleComponent } from "./toggle.component";
 // Directives
 import { ToggleInactiveDirective } from "./directives/inactive.directive";
 import { ToggleActiveDirective } from "./directives/active.directive";
+import { ToggleIndeterminateDirective } from "./directives/indeterminate.directive";
 
 @NgModule({
 	imports: [
@@ -18,11 +19,13 @@ import { ToggleActiveDirective } from "./directives/active.directive";
 	declarations: [
 		ToggleComponent,
 		ToggleInactiveDirective,
+		ToggleIndeterminateDirective,
 		ToggleActiveDirective
 	],
 	exports: [
 		ToggleComponent,
 		ToggleInactiveDirective,
+		ToggleIndeterminateDirective,
 		ToggleActiveDirective
 	]
 })

@@ -6,4 +6,8 @@ import { Component } from "@angular/core";
     templateUrl: "./toggle.page.html",
     styleUrls: ["./toggle.page.scss"]
 })
-export class TogglePage {}
+export class TogglePage {
+
+    // Init flag
+    public isIndeterminate: boolean = true;
+}
