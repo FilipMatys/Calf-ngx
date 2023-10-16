@@ -712,7 +712,6 @@
       }
     }
   },
-  "defaultProject": "geph",
   "cli": {
     "analytics": "fdb817ce-c90a-4c52-aed9-24bed0cdf190"
   }
