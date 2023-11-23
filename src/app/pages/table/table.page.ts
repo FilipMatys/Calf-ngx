@@ -1,6 +1,6 @@
 // External modules
 import { Component, OnInit } from "@angular/core";
-import { ITableConfig } from "table";
+import { IRowClickEvent, ITableConfig } from "table";
 
 @Component({
     selector: "page-table",
@@ -20,6 +20,7 @@ export class TablePage implements OnInit {
         },
         trackRecordBy: (index, item) => item.age,
         allowRowClick: false,
+        allowRowDoubleClick: true,
         sort: {
             allow: true,
             multi: true,
@@ -60,6 +61,10 @@ export class TablePage implements OnInit {
 
         // Add row
         this.addRow();
+    }
+
+    public onRowDoubleClick(event: IRowClickEvent<any>) {
+        console.log(event);
     }
 
     /**

@@ -1,16 +1,16 @@
 // External modules
-import { Component, Input, QueryList, ContentChildren, AfterContentChecked, EventEmitter, Output, HostBinding, Injector, TemplateRef, ContentChild, OnInit, NgZone, OnDestroy, Renderer2, DoCheck, IterableDiffers, IterableDiffer, ElementRef, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { asapScheduler, fromEvent, Subscription } from 'rxjs';
-import { auditTime, startWith } from 'rxjs/operators';
+import { Component, Input, QueryList, ContentChildren, AfterContentChecked, EventEmitter, Output, HostBinding, Injector, TemplateRef, ContentChild, OnInit, NgZone, OnDestroy, Renderer2, DoCheck, IterableDiffers, IterableDiffer, ElementRef, ChangeDetectorRef, ViewChild } from "@angular/core";
+import { asapScheduler, fromEvent, Subscription } from "rxjs";
+import { auditTime, startWith } from "rxjs/operators";
 
 // Data
-import { TableSortDirection } from './enums/sort-direction.enum';
+import { TableSortDirection } from "./enums/sort-direction.enum";
 import { IRowClickEvent } from "./interfaces/row-click-event.interface";
-import { ITableConfig } from './interfaces/config.interface';
-import { ITableSortColumn } from './interfaces/sort-column.interface';
+import { ITableConfig } from "./interfaces/config.interface";
+import { ITableSortColumn } from "./interfaces/sort-column.interface";
 
 // Tokens
-import { CONFIG } from './symbols/config.token';
+import { CONFIG } from "./symbols/config.token";
 
 // Default values
 import { tableConfigDefault } from "./defaults/config.default";
@@ -22,10 +22,10 @@ import { TableExpansionDefinitionDirective } from "./directives/expansion/expans
 import { TableEmptyDefinitionDirective } from "./directives/empty/empty-definition.directive";
 
 // Components
-import { TableHeaderComponent } from './components/header/header.component';
+import { TableHeaderComponent } from "./components/header/header.component";
 
 @Component({
-	selector: 'ngx-table',
+	selector: "ngx-table",
 	templateUrl: "./table.component.html",
 	styleUrls: ["./table.component.scss"]
 })
@@ -183,6 +183,10 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 	@Output("rowClick")
 	public rowClick: EventEmitter<IRowClickEvent<any>> = new EventEmitter<IRowClickEvent<any>>();
 
+	// Row double click
+	@Output("rowDblClick")
+	public rowDoubleClick: EventEmitter<IRowClickEvent<any>> = new EventEmitter<IRowClickEvent<any>>();
+
 	// Sort change
 	@Output("sortChange")
 	public sortChange: EventEmitter<any> = new EventEmitter<any>();
@@ -190,6 +194,10 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 	// Clickable class binding
 	@HostBinding("class.ngx-table--clickable")
 	public get isClickable(): boolean { return this._config.allowRowClick; }
+
+	// Double clickable class binding
+	@HostBinding("class.ngx-table--dbl-clickable")
+	public get isDblClickable(): boolean { return this._config.allowRowDoubleClick; }
 
 	// Head element ref
 	@ViewChild("head", { read: ElementRef, static: true })
@@ -352,6 +360,23 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 
 		// Emit row click event
 		this.rowClick.emit({ item, index });
+	}
+
+	/**
+	 * On row double click
+	 * @param event 
+	 * @param item 
+	 * @param index 
+	 */
+	public onRowDoubleClick(event: Event, item: any, index: number): void {
+		// Check if double click events are allowed
+		if (!this._config.allowRowDoubleClick) {
+			// Do not emit row double click event
+			return;
+		}
+
+		// Emit row double click event
+		this.rowDoubleClick.emit({ item, index });
 	}
 
 	/**
