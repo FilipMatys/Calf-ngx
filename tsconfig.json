@@ -48,6 +48,9 @@
       "input": [
         "dist/input"
       ],
+      "input-group": [
+        "dist/input-group"
+      ],
       "calendar": [
         "dist/calendar"
       ],
@@ -61,6 +64,9 @@
       "toggle": [
         "dist/toggle/toggle",
         "dist/toggle"
+      ],
+      "radio-group": [
+        "dist/radio-group"
       ],
       "tree": [
         "dist/tree/tree",

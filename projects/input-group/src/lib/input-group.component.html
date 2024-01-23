@@ -1,0 +1,8 @@
+<ng-select select="[slot=start]"></ng-select>
+<div class="ngx-input-group-wrapper">
+    <div class="ngx-input-group-option" (click)="onOptionClick($event, option, idx)" *ngFor="let option of options; let idx = index">
+        <ng-container *ngTemplateOutlet="inputGroupOptionTemplate; context: { $implicit: option, index: idx }">
+        </ng-container>
+    </div>
+</div>
+<ng-select select="[slot=end]"></ng-select>

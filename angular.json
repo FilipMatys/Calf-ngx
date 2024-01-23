@@ -710,6 +710,68 @@
           }
         }
       }
+    },
+    "radio-group": {
+      "projectType": "library",
+      "root": "projects/radio-group",
+      "sourceRoot": "projects/radio-group/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/radio-group/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/radio-group/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/radio-group/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/radio-group/src/test.ts",
+            "tsConfig": "projects/radio-group/tsconfig.spec.json",
+            "karmaConfig": "projects/radio-group/karma.conf.js"
+          }
+        }
+      }
+    },
+    "input-group": {
+      "projectType": "library",
+      "root": "projects/input-group",
+      "sourceRoot": "projects/input-group/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/input-group/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/input-group/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/input-group/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/input-group/src/test.ts",
+            "tsConfig": "projects/input-group/tsconfig.spec.json",
+            "karmaConfig": "projects/input-group/karma.conf.js"
+          }
+        }
+      }
     }
   },
   "cli": {
