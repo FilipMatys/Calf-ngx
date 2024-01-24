@@ -3,6 +3,9 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { NgModule } from "@angular/core";
 
+// Pipes
+import { InputGroupSelectedPipe } from "./pipes/selected.pipe";
+
 // Directives
 import { InputGroupOptionDirective } from "./directives/option.directive";
 
@@ -13,6 +16,7 @@ import { InputGroupComponent } from "./input-group.component";
 	imports: [CommonModule, FormsModule],
 	declarations: [
 		InputGroupComponent,
+		InputGroupSelectedPipe,
 		InputGroupOptionDirective
 	],
 	exports: [

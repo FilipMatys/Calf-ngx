@@ -1,0 +1,23 @@
+<h1>Single</h1>
+<ngx-input-group [config]="singleConfig" [(ngModel)]="single" [options]="options">
+    <ng-container *ngxInputGroupOption="let value; let idx = index; let isSelected = selected">
+        {{ idx + 1 }}.
+        {{ value }}
+        {{ isSelected }}
+    </ng-container>
+</ngx-input-group>
+
+<h2>Result</h2>
+{{ single }}
+
+<h1>Multi</h1>
+<ngx-input-group [config]="multiConfig" [(ngModel)]="multi" [options]="options">
+    <ng-container *ngxInputGroupOption="let value; let idx = index; let isSelected = selected">
+        {{ idx + 1 }}.
+        {{ value }}
+        {{ isSelected }}
+    </ng-container>
+</ngx-input-group>
+
+<h2>Result</h2>
+{{ multi }}

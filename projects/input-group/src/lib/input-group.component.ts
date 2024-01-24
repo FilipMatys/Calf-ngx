@@ -1,5 +1,5 @@
 // External modules
-import { Component, ContentChild, HostBinding, Input, TemplateRef, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ContentChild, HostBinding, Input, TemplateRef, forwardRef } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 // Interfaces
@@ -15,6 +15,7 @@ import { InputGroupOptionDirective } from "./directives/option.directive";
 	selector: "ngx-input-group",
 	templateUrl: "./input-group.component.html",
 	styleUrls: ["./input-group.component.scss"],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,
@@ -42,7 +43,7 @@ export class InputGroupComponent implements ControlValueAccessor {
 	public options: any[] = [];
 
 	@Input("config")
-	public config: IInputGroupConfig<any> = { mode: InputGroupMode.SINGLE, compareFn: (a, b) => a === b };
+	public config: IInputGroupConfig<any> = { mode: InputGroupMode.SINGLE, compareFn: (a, b) => a === b, trackOptionByFn: (index) => index };
 
 	@Input("value")
 	private _value: any | any[];
@@ -120,11 +121,14 @@ export class InputGroupComponent implements ControlValueAccessor {
 				if (!(this._value || []).length) {
 					// Set value with the one option
 					this.value = [option];
+
+					// Nothing else to do
+					break;
 				}
 
 				// Copy value
-				const value: any[] = this._value;
-				let vIndex = -1
+				const value: any[] = this._value.slice();
+				let vIndex = -1;
 
 				// Try to find the option in value
 				if (!(value.some((item, idx) => {

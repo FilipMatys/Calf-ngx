@@ -18,18 +18,22 @@ import { AppComponent } from './app.component';
 			// 	path: "drawer",
 			// 	loadChildren: () => import("./pages/drawer/drawer.module").then((m) => m.DrawerPageModule)
 			// },
-			{
-				path: "table",
-				loadChildren: () => import("./pages/table/table.module").then((m) => m.TablePageModule)
-			},
+			// {
+			// 	path: "table",
+			// 	loadChildren: () => import("./pages/table/table.module").then((m) => m.TablePageModule)
+			// },
 			// {
 			// 	path: "form",
 			// 	loadChildren: () => import("./pages/form/form.module").then((m) => m.FormPageModule)
 			// },
 			{
-				path: "tabs",
-				loadChildren: () => import("./pages/tabs/tabs.module").then((m) => m.TabsPageModule)
-			},
+				path: "input-group",
+				loadChildren: () => import("./pages/input-group/input-group.module").then((m) => m.InputGroupPageModule)
+			}
+			// {
+			// 	path: "tabs",
+			// 	loadChildren: () => import("./pages/tabs/tabs.module").then((m) => m.TabsPageModule)
+			// },
 			// {
 			// 	path: "tree",
 			// 	loadChildren: () => import("./pages/tree/tree.module").then((m) => m.TreePageModule)
@@ -46,10 +50,10 @@ import { AppComponent } from './app.component';
 			// 	path: "datepicker",
 			// 	loadChildren: () => import("./pages/datepicker/datepicker.module").then((m) => m.DatepickerPageModule)
 			// },
-			{
-				path: "toggle",
-				loadChildren: () => import("./pages/toggle/toggle.module").then((m) => m.TogglePageModule)
-			},
+			// {
+			// 	path: "toggle",
+			// 	loadChildren: () => import("./pages/toggle/toggle.module").then((m) => m.TogglePageModule)
+			// },
 			// {
 			// 	path: "spreadsheet",
 			// 	loadChildren: () => import("./pages/spreadsheet/spreadsheet.module").then((m) => m.SpreadsheetPageModule)

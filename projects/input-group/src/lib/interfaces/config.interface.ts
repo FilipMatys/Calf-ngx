@@ -8,4 +8,5 @@ import { InputGroupMode } from "../enums/mode.enum";
 export interface IInputGroupConfig<TOption> {
     mode: InputGroupMode;
     compareFn: (a: TOption, b: TOption) => boolean;
+    trackOptionByFn: (index: number, item: TOption) => any;
 }

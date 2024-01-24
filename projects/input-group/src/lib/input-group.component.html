@@ -1,8 +1,17 @@
-<ng-select select="[slot=start]"></ng-select>
+<ng-content select="[slot=start]"></ng-content>
 <div class="ngx-input-group-wrapper">
-    <div class="ngx-input-group-option" (click)="onOptionClick($event, option, idx)" *ngFor="let option of options; let idx = index">
-        <ng-container *ngTemplateOutlet="inputGroupOptionTemplate; context: { $implicit: option, index: idx }">
+    <ng-container *ngFor="let option of options; let idx = index; trackBy:config.trackOptionByFn">
+        <ng-container [ngTemplateOutlet]="template"
+            [ngTemplateOutletContext]="{ option: option, index: idx, selected: option | selected:value:config }"></ng-container>
+    </ng-container>
+</div>
+<ng-content select="[slot=end]"></ng-content>
+
+<ng-template #template let-option="option" let-index="index" let-selected="selected">
+    <div class="ngx-input-group-option" [class.ngx-input-group-option--selected]="selected"
+        (click)="onOptionClick($event, option, idx)">
+        <ng-container
+            *ngTemplateOutlet="inputGroupOptionTemplate; context: { $implicit: option, index: index, selected: selected }">
         </ng-container>
     </div>
-</div>
-<ng-select select="[slot=end]"></ng-select>
+</ng-template>
