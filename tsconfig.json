@@ -65,6 +65,9 @@
         "dist/toggle/toggle",
         "dist/toggle"
       ],
+      "pivot": [
+        "dist/pivot"
+      ],
       "radio-group": [
         "dist/radio-group"
       ],

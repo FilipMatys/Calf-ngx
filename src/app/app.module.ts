@@ -27,9 +27,13 @@ import { AppComponent } from './app.component';
 			// 	loadChildren: () => import("./pages/form/form.module").then((m) => m.FormPageModule)
 			// },
 			{
-				path: "input-group",
-				loadChildren: () => import("./pages/input-group/input-group.module").then((m) => m.InputGroupPageModule)
-			}
+				path: "pivot",
+				loadChildren: () => import("./pages/pivot/pivot.module").then((m) => m.PivotPageModule)
+			},
+			// {
+			// 	path: "input-group",
+			// 	loadChildren: () => import("./pages/input-group/input-group.module").then((m) => m.InputGroupPageModule)
+			// }
 			// {
 			// 	path: "tabs",
 			// 	loadChildren: () => import("./pages/tabs/tabs.module").then((m) => m.TabsPageModule)

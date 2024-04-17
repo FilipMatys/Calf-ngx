@@ -1,0 +1,12 @@
+{
+  "name": "@calf/ngx-pivot",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^14.2.0",
+    "@angular/core": "^14.2.0",
+    "linq": "^3.2.4"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  }
+}

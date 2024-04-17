@@ -1,0 +1,36 @@
+<table class="ngx-pivot-table">
+    <thead>
+        <tr class="ngx-pivot-row ngx-pivot-row--header">
+            <ng-container *ngFor="let column of columns">
+                <th class="ngx-pivot-header-cell" *ngIf="column.isActive">
+                    <div class="ngx-pivot-header-cell__content">
+                        {{ column.header }}
+                    </div>
+                </th>
+            </ng-container>
+        </tr>
+    </thead>
+    <tbody>
+        <ng-container *ngFor="let node of nodes">
+            <ng-container *ngTemplateOutlet="nodeTemplate; context: { node: node, level: 0 }"></ng-container>
+        </ng-container>
+    </tbody>
+</table>
+
+<ng-template #nodeTemplate let-node="node" let-level="level">
+    <tr class="ngx-pivot-row ngx-pivot-row--data" (click)="onToggleNodeClick($event, node)">
+        <ng-container *ngFor="let column of columns; let cIndex = index">
+            <td *ngIf="column.isActive" class="ngx-pivot-cell"
+                [class.ngx-pivot-cell--node]="cIndex === level && (node.nodes || []).length">
+                <div class="ngx-pivot-cell__content">
+                    {{ node.data[column.key] }}
+                </div>
+            </td>
+        </ng-container>
+    </tr>
+    <ng-container *ngIf="node.isExpanded">
+        <ng-container *ngFor="let child of node.nodes">
+            <ng-container *ngTemplateOutlet="nodeTemplate; context: { node: child, level: level + 1 }"></ng-container>
+        </ng-container>
+    </ng-container>
+</ng-template>
