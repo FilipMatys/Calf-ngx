@@ -20,6 +20,12 @@ export interface IPivotColumn {
     header?: string;
 
     /**
+     * Header class
+     * @description Custom header class
+     */
+    headerClass?: string;
+
+    /**
      * Key
      * @description Key used to access column value
      */
@@ -30,4 +36,12 @@ export interface IPivotColumn {
      * @description Whether column is active
      */
     isActive?: boolean;
+
+    /**
+     * Format fn
+     * @description Function to format value
+     * @param value 
+     * @returns 
+     */
+    formatFn?: (value: any) => string;
 }

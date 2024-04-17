@@ -2,7 +2,7 @@
     <thead>
         <tr class="ngx-pivot-row ngx-pivot-row--header">
             <ng-container *ngFor="let column of columns">
-                <th class="ngx-pivot-header-cell" *ngIf="column.isActive">
+                <th *ngIf="column.isActive" class="ngx-pivot-header-cell" [ngClass]="column.headerClass">
                     <div class="ngx-pivot-header-cell__content">
                         {{ column.header }}
                     </div>
