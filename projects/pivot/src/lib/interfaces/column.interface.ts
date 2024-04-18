@@ -1,10 +1,10 @@
 // Enums
 import { PivotCalculateType } from "../enums/calculate-type.enum";
 import { PivotColumnType } from "../enums/column-type.enum";
-import { ICustomNodeHandlerFn } from "./custom-node-handler-fn.interface";
 
 // Interfaces
 import { IPivotFormatFn } from "./format-fn.interface";
+import { ICustomNodeHandlerFn } from "./custom-node-handler-fn.interface";
 
 /**
  * Pivot column

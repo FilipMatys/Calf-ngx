@@ -3,8 +3,8 @@
  * @description Enum for Pivot calculate type
  */
 export enum PivotCalculateType {
-    Sum,
-    Average,
-    Minimum,
-    Maximum
+    Sum = "sum",
+    Average = "avg",
+    Minimum = "min",
+    Maximum = "max"
 }
