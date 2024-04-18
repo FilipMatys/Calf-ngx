@@ -48,7 +48,9 @@ export class PivotPage {
             header: "Price",
             key: "price",
             isActive: true,
-            type: PivotColumnType.Number
+            type: PivotColumnType.Number,
+            cellClass: "gd-text--alignment-right",
+            formatFn: (value) => `${value} USD`
         }
     ];
 

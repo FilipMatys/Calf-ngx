@@ -2,6 +2,9 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 
+// Pipes
+import { PivotFormatPipe } from "./pipes/format.pipe";
+
 // Components
 import { PivotComponent } from "./pivot.component";
 
@@ -9,7 +12,10 @@ import { PivotComponent } from "./pivot.component";
     imports: [
         CommonModule
     ],
-    declarations: [PivotComponent],
+    declarations: [
+        PivotComponent,
+        PivotFormatPipe
+    ],
     exports: [PivotComponent]
 })
 export class PivotModule { }

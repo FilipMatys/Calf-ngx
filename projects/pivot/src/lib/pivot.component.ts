@@ -1,5 +1,5 @@
 // External modules
-import { Component, Input, OnChanges } from "@angular/core";
+import { Component, HostBinding, Input, OnChanges } from "@angular/core";
 import * as Enumerable from "linq";
 
 // Interfaces
@@ -18,6 +18,9 @@ import { PivotColumnType } from "./enums/column-type.enum";
 })
 export class PivotComponent implements OnChanges {
 
+	@HostBinding("class.ngx-pivot")
+	public hasDefaultClass: boolean = true;
+
 	@Input("columns")
 	public columns: IPivotColumns = [];
 
@@ -32,7 +35,7 @@ export class PivotComponent implements OnChanges {
 	 */
 	public async ngOnChanges(): Promise<void> {
 		// Rebuild
-		this.rebuild();
+		await this.rebuild();
 	}
 
 	/**
@@ -84,7 +87,7 @@ export class PivotComponent implements OnChanges {
 		const eData = Enumerable.from(data || []);
 
 		// Group data by column key
-		const groups = eData.groupBy((x) => x[column.key]).toArray();
+		const groups = eData.groupBy((x) => x[column.key]).orderBy((x) => x.key()).toArray();
 
 		// Iterate groups
 		for (let index = 0; index < groups.length; index++) {

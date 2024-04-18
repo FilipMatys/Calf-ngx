@@ -1,11 +1,14 @@
 // Enums
 import { PivotColumnType } from "../enums/column-type.enum";
 
+// Interfaces
+import { IPivotFormatFn } from "./format-fn.interface";
+
 /**
  * Pivot column
  * @description Interface for Pivot column
  */
-export interface IPivotColumn {
+export interface IPivotColumn<TValue = any> {
 
     /**
      * Type
@@ -26,6 +29,12 @@ export interface IPivotColumn {
     headerClass?: string;
 
     /**
+     * Cell class
+     * @description Custom cell class
+     */
+    cellClass?: string;
+
+    /**
      * Key
      * @description Key used to access column value
      */
@@ -43,5 +52,5 @@ export interface IPivotColumn {
      * @param value 
      * @returns 
      */
-    formatFn?: (value: any) => string;
+    formatFn?: IPivotFormatFn<TValue>;
 }

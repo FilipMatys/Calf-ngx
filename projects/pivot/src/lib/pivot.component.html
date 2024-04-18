@@ -20,10 +20,10 @@
 <ng-template #nodeTemplate let-node="node" let-level="level">
     <tr class="ngx-pivot-row ngx-pivot-row--data" (click)="onToggleNodeClick($event, node)">
         <ng-container *ngFor="let column of columns; let cIndex = index">
-            <td *ngIf="column.isActive" class="ngx-pivot-cell"
+            <td *ngIf="column.isActive" class="ngx-pivot-cell" [ngClass]="column.cellClass"
                 [class.ngx-pivot-cell--node]="cIndex === level && (node.nodes || []).length">
                 <div class="ngx-pivot-cell__content">
-                    {{ node.data[column.key] }}
+                    {{ node.data[column.key] | format:column.formatFn }}
                 </div>
             </td>
         </ng-container>
