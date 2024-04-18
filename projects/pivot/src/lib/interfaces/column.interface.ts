@@ -1,6 +1,7 @@
 // Enums
 import { PivotCalculateType } from "../enums/calculate-type.enum";
 import { PivotColumnType } from "../enums/column-type.enum";
+import { ICustomNodeHandlerFn } from "./custom-node-handler-fn.interface";
 
 // Interfaces
 import { IPivotFormatFn } from "./format-fn.interface";
@@ -34,6 +35,13 @@ export interface IPivotColumn<TValue = any> {
      * @description Custom cell class
      */
     cellClass?: string;
+
+    /**
+     * Custom node handler fn
+     * @description Custom function to be executed
+     * when clicked on a node
+     */
+    customNodeHandlerFn?: ICustomNodeHandlerFn<any>;
 
     /**
      * Footer class
