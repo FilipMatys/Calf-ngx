@@ -1,5 +1,5 @@
 // External modules
-import { Component, HostBinding, Input, OnChanges } from "@angular/core";
+import { Component, HostBinding, Input, OnChanges, TrackByFunction } from "@angular/core";
 import * as Enumerable from "linq";
 
 // Interfaces
@@ -29,6 +29,14 @@ export class PivotComponent implements OnChanges {
 
 	// Nodes
 	public nodes: IPivotNodes<any> = [];
+
+	/**
+	 * Track by column function
+	 * @param index 
+	 * @param column 
+	 * @returns 
+	 */
+	public trackColumnByFn: TrackByFunction<IPivotColumn> = (index, column) => column.key;
 
 	/**
 	 * On changes
@@ -61,6 +69,72 @@ export class PivotComponent implements OnChanges {
 
 		// Build node
 		this.nodes = await this.buildNodes<any>(sColumns, this.data);
+	}
+
+	/**
+	 * Expand call
+	 * @description Expand all nodes
+	 */
+	public async expandAll(): Promise<void> {
+		// Expand nodes
+		for (let index = 0; index < (this.nodes || []).length; index++) {
+			// Get node
+			const node = this.nodes[index];
+
+			// Expand node
+			await this.expandNode(node);
+		}
+	}
+
+	/**
+	 * Collapse all
+	 * @description Collapse all nodes
+	 */
+	public async collapseAll(): Promise<void> {
+		// Collapse nodes
+		for (let index = 0; index < (this.nodes || []).length; index++) {
+			// Get node
+			const node = this.nodes[index];
+
+			// Collapse node
+			await this.collapseNode(node);
+		}
+	}
+
+	/**
+	 * Collapse node
+	 * @param node 
+	 */
+	private async collapseNode(node: IPivotNode): Promise<void> {
+		// Collapse children nodes
+		for (let index = 0; index < (node.nodes || []).length; index++) {
+			// Get node
+			const child = node.nodes[index];
+
+			// Collapse node
+			await this.collapseNode(child);
+		}
+
+		// Collapse node
+		node.isExpanded = false;
+	}
+
+	/**
+	 * Expand node
+	 * @param node 
+	 */
+	private async expandNode(node: IPivotNode): Promise<void> {
+		// Expand children nodes
+		for (let index = 0; index < (node.nodes || []).length; index++) {
+			// Get node
+			const child = node.nodes[index];
+
+			// Expand node
+			await this.expandNode(child);
+		}
+
+		// Expand node
+		node.isExpanded = true;
 	}
 
 	/**

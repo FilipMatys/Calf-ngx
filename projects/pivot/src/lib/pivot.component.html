@@ -1,7 +1,7 @@
 <table class="ngx-pivot-table">
     <thead>
         <tr class="ngx-pivot-row ngx-pivot-row--header">
-            <ng-container *ngFor="let column of columns">
+            <ng-container *ngFor="let column of columns; trackBy: trackColumnByFn">
                 <th *ngIf="column.isActive" class="ngx-pivot-header-cell" [ngClass]="column.headerClass">
                     <div class="ngx-pivot-header-cell__content">
                         {{ column.header }}
@@ -15,11 +15,22 @@
             <ng-container *ngTemplateOutlet="nodeTemplate; context: { node: node, level: 0 }"></ng-container>
         </ng-container>
     </tbody>
+    <tfoot>
+        <tr class="ngx-pivot-row ngx-pivot-row--footer">
+            <ng-container *ngFor="let column of columns; trackBy: trackColumnByFn">
+                <td *ngIf="column.isActive" class="ngx-pivot-footer-cell" [ngClass]="column.footerClass">
+                    <div *ngIf="column.footerCalcType" class="ngx-pivot-header-cell__content">
+                        {{ data | calculate:column.key:column.footerCalcType | format:column.formatFn }}
+                    </div>
+                </td>
+            </ng-container>
+        </tr>
+    </tfoot>
 </table>
 
 <ng-template #nodeTemplate let-node="node" let-level="level">
     <tr class="ngx-pivot-row ngx-pivot-row--data" (click)="onToggleNodeClick($event, node)">
-        <ng-container *ngFor="let column of columns; let cIndex = index">
+        <ng-container *ngFor="let column of columns; trackBy: trackColumnByFn; let cIndex = index">
             <td *ngIf="column.isActive" class="ngx-pivot-cell" [ngClass]="column.cellClass"
                 [class.ngx-pivot-cell--node]="cIndex === level && (node.nodes || []).length">
                 <div class="ngx-pivot-cell__content">

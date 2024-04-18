@@ -1,4 +1,5 @@
 // Enums
+import { PivotCalculateType } from "../enums/calculate-type.enum";
 import { PivotColumnType } from "../enums/column-type.enum";
 
 // Interfaces
@@ -35,6 +36,12 @@ export interface IPivotColumn<TValue = any> {
     cellClass?: string;
 
     /**
+     * Footer class
+     * @description Custom footer class
+     */
+    footerClass?: string;
+
+    /**
      * Key
      * @description Key used to access column value
      */
@@ -53,4 +60,10 @@ export interface IPivotColumn<TValue = any> {
      * @returns 
      */
     formatFn?: IPivotFormatFn<TValue>;
+
+    /**
+     * Footer calc type
+     * @description Type of footer calculation
+     */
+    footerCalcType?: PivotCalculateType;
 }

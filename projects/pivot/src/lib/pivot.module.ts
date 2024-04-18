@@ -4,6 +4,7 @@ import { NgModule } from "@angular/core";
 
 // Pipes
 import { PivotFormatPipe } from "./pipes/format.pipe";
+import { PivotCalculatePipe } from "./pipes/calculate.pipe";
 
 // Components
 import { PivotComponent } from "./pivot.component";
@@ -14,7 +15,8 @@ import { PivotComponent } from "./pivot.component";
     ],
     declarations: [
         PivotComponent,
-        PivotFormatPipe
+        PivotFormatPipe,
+        PivotCalculatePipe
     ],
     exports: [PivotComponent]
 })

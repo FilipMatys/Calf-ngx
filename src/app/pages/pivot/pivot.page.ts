@@ -1,6 +1,6 @@
 // External modules
-import { Component } from "@angular/core";
-import { IPivotColumns, PivotColumnType } from "pivot";
+import { Component, ViewChild } from "@angular/core";
+import { IPivotColumns, PivotCalculateType, PivotColumnType, PivotComponent } from "pivot";
 
 interface IMotorcycle {
     manufacturer?: string;
@@ -16,6 +16,9 @@ interface IMotorcycle {
     styleUrls: ["./pivot.page.scss"]
 })
 export class PivotPage {
+
+    @ViewChild(PivotComponent)
+    public pivot: PivotComponent;
 
 
     // Columns
@@ -50,7 +53,8 @@ export class PivotPage {
             isActive: true,
             type: PivotColumnType.Number,
             cellClass: "gd-text--alignment-right",
-            formatFn: (value) => `${value} USD`
+            formatFn: (value) => `${value} USD`,
+            footerCalcType: PivotCalculateType.Minimum
         }
     ];
 
@@ -91,4 +95,8 @@ export class PivotPage {
             price: 219000
         }
     ];
+
+    public expand() { this.pivot.expandAll(); }
+
+    public collapse() { this.pivot.collapseAll() }
 }
