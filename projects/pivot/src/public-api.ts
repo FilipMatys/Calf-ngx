@@ -9,3 +9,4 @@ export * from "./lib/interfaces/column.interface";
 export * from "./lib/interfaces/columns.interface";
 export * from "./lib/interfaces/node.interface";
 export * from "./lib/interfaces/nodes.interface";
+export * from "./lib/interfaces/format-fn.interface";
