@@ -1,6 +1,6 @@
 // External modules
 import { Component, ViewChild } from "@angular/core";
-import { IPivotColumns, PivotCalculateType, PivotColumnType, PivotComponent } from "pivot";
+import { IPivotColumns, IPivotConfig, PivotCalculateType, PivotColumnType, PivotComponent } from "pivot";
 
 interface IMotorcycle {
     manufacturer?: string;
@@ -20,6 +20,8 @@ export class PivotPage {
     @ViewChild(PivotComponent)
     public pivot: PivotComponent;
 
+    // Config
+    public config: IPivotConfig = { nodesExpandedAsDefault: false };
 
     // Columns
     public columns: IPivotColumns = [

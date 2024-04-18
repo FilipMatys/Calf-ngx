@@ -6,6 +6,7 @@ import * as Enumerable from "linq";
 import { IPivotColumns } from "./interfaces/columns.interface";
 import { IPivotNodes } from "./interfaces/nodes.interface";
 import { IPivotColumn } from "./interfaces/column.interface";
+import { IPivotConfig } from "./interfaces/config.interface";
 import { IPivotNode } from "./interfaces/node.interface";
 
 // Enums
@@ -20,6 +21,9 @@ export class PivotComponent implements OnChanges {
 
 	@HostBinding("class.ngx-pivot")
 	public hasDefaultClass: boolean = true;
+
+	@Input("config")
+	public config: IPivotConfig = {};
 
 	@Input("columns")
 	public columns: IPivotColumns = [];
@@ -170,7 +174,7 @@ export class PivotComponent implements OnChanges {
 			const group = groups[index];
 
 			// Create new node
-			const node: IPivotNode<TData> = { data: {} as any };
+			const node: IPivotNode<TData> = { data: {} as any, isExpanded: !!this.config?.nodesExpandedAsDefault };
 
 			// Set node data column value
 			node.data[column.key] = group.key();
