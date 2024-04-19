@@ -4,7 +4,7 @@ import { PivotColumnType } from "../enums/column-type.enum";
 
 // Interfaces
 import { IPivotFormatFn } from "./format-fn.interface";
-import { ICustomNodeHandlerFn } from "./custom-node-handler-fn.interface";
+import { ICustomNodeAction } from "./custom-node-action.interface";
 
 /**
  * Pivot column
@@ -37,11 +37,11 @@ export interface IPivotColumn<TValue = any> {
     cellClass?: string;
 
     /**
-     * Custom node handler fn
-     * @description Custom function to be executed
-     * when clicked on a node
+     * Custom node action
+     * @description Custom function available 
+     * for the node
      */
-    customNodeHandlerFn?: ICustomNodeHandlerFn<any>;
+    customNodeAction?: ICustomNodeAction<any>;
 
     /**
      * Footer class

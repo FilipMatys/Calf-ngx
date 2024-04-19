@@ -48,7 +48,11 @@ export class PivotPage {
             key: "propulsion",
             isActive: true,
             type: PivotColumnType.String,
-            customNodeHandlerFn: (node) => console.log(node.data)
+            customNodeAction: {
+                title: "Ext.",
+                actionFn: (node) => console.log(node.data),
+                actionClass: "custom-action"
+            }
         },
         {
             header: "Price",

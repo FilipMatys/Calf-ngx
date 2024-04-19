@@ -12,4 +12,5 @@ export * from "./lib/interfaces/node.interface";
 export * from "./lib/interfaces/nodes.interface";
 export * from "./lib/interfaces/config.interface";
 export * from "./lib/interfaces/format-fn.interface";
-export * from "./lib/interfaces/custom-node-handler-fn.interface";
+export * from "./lib/interfaces/custom-node-action-fn.interface";
+export * from "./lib/interfaces/custom-node-action.interface";

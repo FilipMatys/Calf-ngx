@@ -56,12 +56,26 @@ export class PivotComponent implements OnChanges {
 	 * @param node 
 	 * @param column
 	 */
-	public onNodeClick(event: Event, node: IPivotNode<any>, column: IPivotColumn): void {
+	public onNodeClick(event: Event, node: IPivotNode<any>): void {
 		// Prevent event propagation
 		event.stopPropagation();
 
-		// Run custom handler if present, otherwise toggle node
-		column.customNodeHandlerFn ? (column.customNodeHandlerFn(node)) : this.toggleNode(node);
+		// Toggle node
+		this.toggleNode(node);
+	}
+
+	/**
+	 * On node action click
+	 * @param event 
+	 * @param node 
+	 * @param column 
+	 */
+	public onNodeActionClick(event: Event, node: IPivotNode<any>, column: IPivotColumn): void {
+		// Prevent event propagation
+		event.stopPropagation();
+
+		// Execute node action
+		column.customNodeAction?.actionFn && column.customNodeAction?.actionFn(node);
 	}
 
 	/**

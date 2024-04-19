@@ -38,7 +38,13 @@
                     [class.ngx-pivot-cell--state-expanded]="(node.nodes || []).length && node.isExpanded"
                     (click)="onNodeClick($event, node, column)">
                     <div class="ngx-pivot-cell__content">
-                        {{ node.data[column.key] | format:column.formatFn }}
+                        <span class="ngx-pivot-cell__text">
+                            {{ node.data[column.key] | format:column.formatFn }}
+                        </span>
+                        <span *ngIf="column.customNodeAction" (click)="onNodeActionClick($event, node, column)" class="ngx-pivot-cell__action"
+                            [ngClass]="column.customNodeAction?.actionClass">
+                            {{ column.customNodeAction.title }}
+                        </span>
                     </div>
                 </td>
             </ng-container>
@@ -46,7 +52,9 @@
             <ng-template #plainCellTemplate>
                 <td class="ngx-pivot-cell" [ngClass]="column.cellClass">
                     <div class="ngx-pivot-cell__content">
-                        {{ node.data[column.key] | format:column.formatFn }}
+                        <span class="ngx-pivot-cell__text">
+                            {{ node.data[column.key] | format:column.formatFn }}
+                        </span>
                     </div>
                 </td>
             </ng-template>
