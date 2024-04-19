@@ -1,8 +1,8 @@
 <table class="ngx-pivot-table">
     <thead>
         <tr class="ngx-pivot-row ngx-pivot-row--header">
-            <ng-container *ngFor="let column of columns; trackBy: trackColumnByFn">
-                <th *ngIf="column.isActive" class="ngx-pivot-header-cell" [ngClass]="column.headerClass">
+            <ng-container *ngFor="let column of columns | active; trackBy: trackColumnByFn">
+                <th class="ngx-pivot-header-cell" [ngClass]="column.headerClass">
                     <div class="ngx-pivot-header-cell__content">
                         {{ column.header }}
                     </div>
@@ -17,8 +17,8 @@
     </tbody>
     <tfoot>
         <tr class="ngx-pivot-row ngx-pivot-row--footer">
-            <ng-container *ngFor="let column of columns; trackBy: trackColumnByFn">
-                <td *ngIf="column.isActive" class="ngx-pivot-footer-cell" [ngClass]="column.footerClass">
+            <ng-container *ngFor="let column of columns | active; trackBy: trackColumnByFn">
+                <td class="ngx-pivot-footer-cell" [ngClass]="column.footerClass">
                     <div *ngIf="column.footerCalcType" class="ngx-pivot-header-cell__content">
                         {{ data | calculate:column.key:column.footerCalcType | format:column.formatFn }}
                     </div>
@@ -30,28 +30,26 @@
 
 <ng-template #nodeTemplate let-node="node" let-level="level">
     <tr class="ngx-pivot-row ngx-pivot-row--data">
-        <ng-container *ngFor="let column of columns; trackBy: trackColumnByFn; let cIndex = index">
-            <ng-container *ngIf="column.isActive">
-                <ng-container *ngIf="cIndex === level; else plainCellTemplate">
-                    <td class="ngx-pivot-cell ngx-pivot-cell--node" [ngClass]="column.cellClass"
-                        [class.ngx-pivot-cell--expandable]="(node.nodes || []).length"
-                        [class.ngx-pivot-cell--state-collapsed]="(node.nodes || []).length && !node.isExpanded"
-                        [class.ngx-pivot-cell--state-expanded]="(node.nodes || []).length && node.isExpanded"
-                        (click)="onNodeClick($event, node, column)">
-                        <div class="ngx-pivot-cell__content">
-                            {{ node.data[column.key] | format:column.formatFn }}
-                        </div>
-                    </td>
-                </ng-container>
-
-                <ng-template #plainCellTemplate>
-                    <td class="ngx-pivot-cell" [ngClass]="column.cellClass">
-                        <div class="ngx-pivot-cell__content">
-                            {{ node.data[column.key] | format:column.formatFn }}
-                        </div>
-                    </td>
-                </ng-template>
+        <ng-container *ngFor="let column of columns | active; trackBy: trackColumnByFn; let cIndex = index">
+            <ng-container *ngIf="cIndex === level; else plainCellTemplate">
+                <td class="ngx-pivot-cell ngx-pivot-cell--node" [ngClass]="column.cellClass"
+                    [class.ngx-pivot-cell--expandable]="(node.nodes || []).length"
+                    [class.ngx-pivot-cell--state-collapsed]="(node.nodes || []).length && !node.isExpanded"
+                    [class.ngx-pivot-cell--state-expanded]="(node.nodes || []).length && node.isExpanded"
+                    (click)="onNodeClick($event, node, column)">
+                    <div class="ngx-pivot-cell__content">
+                        {{ node.data[column.key] | format:column.formatFn }}
+                    </div>
+                </td>
             </ng-container>
+
+            <ng-template #plainCellTemplate>
+                <td class="ngx-pivot-cell" [ngClass]="column.cellClass">
+                    <div class="ngx-pivot-cell__content">
+                        {{ node.data[column.key] | format:column.formatFn }}
+                    </div>
+                </td>
+            </ng-template>
         </ng-container>
     </tr>
     <ng-container *ngIf="node.isExpanded">
