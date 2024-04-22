@@ -4,7 +4,9 @@
             <ng-container *ngFor="let column of columns | active; trackBy: trackColumnByFn">
                 <th class="ngx-pivot-header-cell" [ngClass]="column.headerClass">
                     <div class="ngx-pivot-header-cell__content">
-                        {{ column.header }}
+                        <span class="ngx-pivot-cell__text">
+                            {{ column.header }}
+                        </span>
                     </div>
                 </th>
             </ng-container>
@@ -19,8 +21,10 @@
         <tr class="ngx-pivot-row ngx-pivot-row--footer">
             <ng-container *ngFor="let column of columns | active; trackBy: trackColumnByFn">
                 <td class="ngx-pivot-footer-cell" [ngClass]="column.footerClass">
-                    <div *ngIf="column.footerCalcType" class="ngx-pivot-header-cell__content">
-                        {{ data | calculate:column.key:column.footerCalcType | format:column.formatFn }}
+                    <div *ngIf="column.footerCalcType" class="ngx-pivot-footer-cell__content">
+                        <span class="ngx-pivot-cell__text">
+                            {{ data | calculate:column.key:column.footerCalcType | format:column.formatFn }}
+                        </span>
                     </div>
                 </td>
             </ng-container>
@@ -41,8 +45,8 @@
                         <span class="ngx-pivot-cell__text">
                             {{ node.data[column.key] | format:column.formatFn }}
                         </span>
-                        <span *ngIf="column.customNodeAction" (click)="onNodeActionClick($event, node, column)" class="ngx-pivot-cell__action"
-                            [ngClass]="column.customNodeAction?.actionClass">
+                        <span *ngIf="column.customNodeAction" (click)="onNodeActionClick($event, node, column)"
+                            class="ngx-pivot-cell__action" [ngClass]="column.customNodeAction?.actionClass">
                             {{ column.customNodeAction.title }}
                         </span>
                     </div>
