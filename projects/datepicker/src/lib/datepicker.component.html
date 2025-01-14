@@ -37,7 +37,7 @@
                     class="ngx-datepicker-time-input ngx-datepicker-time-input--minutes" type="number" min="0" max="59">
             </div>
             <div class="ngx-datepicker-footer">
-                <div class="ngx-datepicker-footer__row">
+                <div *ngIf="!config?.disableDate" class="ngx-datepicker-footer__row">
                     <span *ngIf="todayTemplateRef" (click)="onTodayClick($event)"
                         class="ngx-datepicker-button ngx-datepicker-button--today">
                         <ng-container *ngTemplateOutlet="todayTemplateRef"></ng-container>
