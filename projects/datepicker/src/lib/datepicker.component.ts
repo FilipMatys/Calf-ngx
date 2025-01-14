@@ -208,8 +208,8 @@ export class DatepickerComponent implements ControlValueAccessor {
 		// Prevent event propagation
 		event.stopPropagation();
 
-		// Select day
-		this.selectDay(new Date());
+		// Select today
+		this.selectToday();
 	}
 
 	/**
@@ -264,6 +264,17 @@ export class DatepickerComponent implements ControlValueAccessor {
 	private async setActiveView(view: number): Promise<void> {
 		// Assign view
 		this.activeView = view;
+	}
+
+	/**
+	 * Select today
+	 */
+	private async selectToday(): Promise<void> {
+		// Select today
+		this.selectDay(new Date());
+
+		// Set 
+		this.activeView = DatepickerView.DAYS;
 	}
 
 	/**

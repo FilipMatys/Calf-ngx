@@ -1,5 +1,5 @@
 // External modules
-import { Component, EventEmitter, HostBinding, Input, OnInit, Output, TemplateRef } from "@angular/core";
+import { Component, EventEmitter, HostBinding, Input, OnChanges, Output, SimpleChanges, TemplateRef } from "@angular/core";
 import Moment from "moment";
 import { DatepickerView } from "../../enums/view.enum";
 
@@ -14,7 +14,7 @@ import { IDatepickerWeek } from "../../interfaces/week.interface";
     templateUrl: "./days.component.html",
     styleUrls: ["./days.component.scss"]
 })
-export class DatepickerDaysComponent implements OnInit {
+export class DatepickerDaysComponent implements OnChanges {
 
     @HostBinding("class.ngx-datepicker-days")
     public readonly hasDefaultClass: boolean = true;
@@ -137,9 +137,10 @@ export class DatepickerDaysComponent implements OnInit {
     }
 
     /**
-     * On init hook
+     * On changes hook
+     * @param changes 
      */
-    public async ngOnInit(): Promise<void> {
+    public async ngOnChanges(changes: SimpleChanges): Promise<void> {
         // Get selected
         if (this.value) {
             // Assign date from value
