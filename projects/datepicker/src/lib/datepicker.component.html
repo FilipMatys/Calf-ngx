@@ -29,10 +29,10 @@
         </ng-container>
         <ng-container *ngIf="activeView === DatepickerView.DAYS">
             <div *ngIf="config.allowTime" class="ngx-datepicker-time">
-                <input [value]="hours" #hoursInput type="ngx-datepicker-time-input ngx-datepicker-time-input--hours"
+                <input [value]="hours" #hoursInput class="ngx-datepicker-time-input ngx-datepicker-time-input--hours"
                     type="number" min="0" max="23">
                 <input [value]="minutes" #minutesInput
-                    type="ngx-datepicker-time-input ngx-datepicker-time-input--minutes" type="number" min="0" max="59">
+                    class="ngx-datepicker-time-input ngx-datepicker-time-input--minutes" type="number" min="0" max="59">
             </div>
             <div class="ngx-datepicker-footer">
                 <div class="ngx-datepicker-footer__row">
