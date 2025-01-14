@@ -31,4 +31,10 @@ export interface IDatepickerConfig {
      * @description Allow user to set time
      */
     allowTime?: boolean;
+
+    /**
+     * Disable date
+     * @description Disable date pick
+     */
+    disableDate?: boolean;
 }

@@ -14,21 +14,23 @@
 <ng-container *ngIf="isOpen || config?.isDialogAlwaysRendered">
     <div class="ngx-datepicker-backdrop" (click)="onCancelClick($event)"></div>
     <div class="ngx-datepicker-dialog">
-        <ng-container [ngSwitch]="activeView">
-            <ngx-datepicker-days *ngSwitchCase="DatepickerView.DAYS" [value]="selected" (select)="onDaySelect($event)"
-                (view)="onViewChangeRequest($event)" [config]="config" [nextTemplateRef]="nextTemplateRef"
-                [previousTemplateRef]="previousTemplateRef">
-            </ngx-datepicker-days>
-            <ngx-datepicker-months *ngSwitchCase="DatepickerView.MONTHS" [value]="selected"
-                (select)="onMonthSelect($event)" (view)="onViewChangeRequest($event)" [config]="config">
-            </ngx-datepicker-months>
-            <ngx-datepicker-years *ngSwitchCase="DatepickerView.YEARS" [value]="selected"
-                (select)="onYearSelect($event)" [config]="config" [nextTemplateRef]="nextTemplateRef"
-                [previousTemplateRef]="previousTemplateRef">
-            </ngx-datepicker-years>
+        <ng-container *ngIf="!config?.disableDate">
+            <ng-container [ngSwitch]="activeView">
+                <ngx-datepicker-days *ngSwitchCase="DatepickerView.DAYS" [value]="selected"
+                    (select)="onDaySelect($event)" (view)="onViewChangeRequest($event)" [config]="config"
+                    [nextTemplateRef]="nextTemplateRef" [previousTemplateRef]="previousTemplateRef">
+                </ngx-datepicker-days>
+                <ngx-datepicker-months *ngSwitchCase="DatepickerView.MONTHS" [value]="selected"
+                    (select)="onMonthSelect($event)" (view)="onViewChangeRequest($event)" [config]="config">
+                </ngx-datepicker-months>
+                <ngx-datepicker-years *ngSwitchCase="DatepickerView.YEARS" [value]="selected"
+                    (select)="onYearSelect($event)" [config]="config" [nextTemplateRef]="nextTemplateRef"
+                    [previousTemplateRef]="previousTemplateRef">
+                </ngx-datepicker-years>
+            </ng-container>
         </ng-container>
         <ng-container *ngIf="activeView === DatepickerView.DAYS">
-            <div *ngIf="config.allowTime" class="ngx-datepicker-time">
+            <div *ngIf="config?.allowTime" class="ngx-datepicker-time">
                 <input [value]="hours" #hoursInput class="ngx-datepicker-time-input ngx-datepicker-time-input--hours"
                     type="number" min="0" max="23">
                 <input [value]="minutes" #minutesInput
