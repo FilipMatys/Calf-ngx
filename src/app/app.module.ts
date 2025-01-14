@@ -26,10 +26,10 @@ import { AppComponent } from './app.component';
 			// 	path: "form",
 			// 	loadChildren: () => import("./pages/form/form.module").then((m) => m.FormPageModule)
 			// },
-			{
-				path: "pivot",
-				loadChildren: () => import("./pages/pivot/pivot.module").then((m) => m.PivotPageModule)
-			},
+			// {
+			// 	path: "pivot",
+			// 	loadChildren: () => import("./pages/pivot/pivot.module").then((m) => m.PivotPageModule)
+			// },
 			// {
 			// 	path: "input-group",
 			// 	loadChildren: () => import("./pages/input-group/input-group.module").then((m) => m.InputGroupPageModule)
@@ -50,10 +50,10 @@ import { AppComponent } from './app.component';
 			// 	path: "tooltip",
 			// 	loadChildren: () => import("./pages/tooltip/tooltip.module").then((m) => m.TooltipPageModule)
 			// },
-			// {
-			// 	path: "datepicker",
-			// 	loadChildren: () => import("./pages/datepicker/datepicker.module").then((m) => m.DatepickerPageModule)
-			// },
+			{
+				path: "datepicker",
+				loadChildren: () => import("./pages/datepicker/datepicker.module").then((m) => m.DatepickerPageModule)
+			},
 			// {
 			// 	path: "toggle",
 			// 	loadChildren: () => import("./pages/toggle/toggle.module").then((m) => m.TogglePageModule)

@@ -5,13 +5,16 @@
 
 <main>
     <ngx-datepicker name="value" [(ngModel)]="value" [config]="config" [placeholder]="'Ahoj'">
-        <ng-container *ngxDatepickerValue="let value">{{ value | date }}</ng-container>
+        <ng-container *ngxDatepickerValue="let value">{{ value | date:'short' }}</ng-container>
         <ng-container *ngxDatepickerPrevious>Prev</ng-container>
         <ng-container *ngxDatepickerNext>Next</ng-container>
         <ng-container *ngxDatepickerConfirm>Confirm</ng-container>
         <ng-container *ngxDatepickerCancel>Cancel</ng-container>
         <ng-container *ngxDatepickerClear>
             <button>X</button>
+        </ng-container>
+        <ng-container *ngxDatepickerToday>
+            Today
         </ng-container>
     </ngx-datepicker>
 </main>

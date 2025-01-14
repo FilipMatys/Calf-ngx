@@ -1,5 +1,5 @@
 // External modules
-import { Component, ContentChild, forwardRef, HostBinding, HostListener, Input, TemplateRef } from "@angular/core";
+import { Component, ContentChild, forwardRef, HostBinding, ElementRef, ViewChild, Input, TemplateRef } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import Moment from "moment";
 
@@ -16,6 +16,7 @@ import { DatepickerValueDirective } from "./directives/value.directive";
 import { DatepickerConfirmDirective } from "./directives/confirm.directive";
 import { DatepickerCancelDirective } from "./directives/cancel.directive";
 import { DatepickerClearDirective } from "./directives/clear.directive";
+import { DatepickerTodayDirective } from "./directives/today.directive";
 
 @Component({
 	selector: "ngx-datepicker",
@@ -37,6 +38,12 @@ export class DatepickerComponent implements ControlValueAccessor {
 	@Input("config")
 	public config: IDatepickerConfig;
 
+	@ViewChild("minutesInput")
+	public minutesInputRef: ElementRef<HTMLInputElement>;
+
+	@ViewChild("hoursInput")
+	public hoursInputRef: ElementRef<HTMLInputElement>;
+
 	// Public value getter
 	public get value(): Date { return this._value };
 
@@ -47,6 +54,24 @@ export class DatepickerComponent implements ControlValueAccessor {
 
 		// Propagate change
 		this.propagateChange(this._value);
+	}
+
+	// Hours getter
+	public get hours(): number {
+		// Get value
+		const mValue = Moment(this._value);
+
+		// Return hours
+		return mValue.hours();
+	}
+
+	// Minutes getter
+	public get minutes(): number {
+		// Get value
+		const mValue = Moment(this._value);
+
+		// Return minutes
+		return mValue.minutes();
 	}
 
 	// Make enums available to template
@@ -81,12 +106,6 @@ export class DatepickerComponent implements ControlValueAccessor {
 	@HostBinding("attr.tabIndex")
 	public tabIndex: number = 0;
 
-	@HostListener("blur", ["$event"])
-	public onBlur(event: Event): void {
-		// Close
-		this.close();
-	}
-
 	// Placeholder
 	@Input("placeholder")
 	public placeholder: string = "";
@@ -117,6 +136,10 @@ export class DatepickerComponent implements ControlValueAccessor {
 	// Clear template ref
 	@ContentChild(DatepickerClearDirective, { read: TemplateRef })
 	public clearTemplateRef: TemplateRef<HTMLElement>
+
+	// Today template ref
+	@ContentChild(DatepickerTodayDirective, { read: TemplateRef })
+	public todayTemplateRef: TemplateRef<HTMLElement>
 
 	/**
 	 * Write value
@@ -175,6 +198,18 @@ export class DatepickerComponent implements ControlValueAccessor {
 
 		// Clear value
 		this.clear();
+	}
+
+	/**
+	 * On today click
+	 * @param event 
+	 */
+	public onTodayClick(event: Event): void {
+		// Prevent event propagation
+		event.stopPropagation();
+
+		// Select day
+		this.selectDay(new Date());
 	}
 
 	/**
@@ -260,8 +295,19 @@ export class DatepickerComponent implements ControlValueAccessor {
 	 * @param day 
 	 */
 	private async selectDay(day: Date): Promise<void> {
+		// Init moment day
+		const mDay = Moment(day);
+
+		// Create moment day from selected
+		const mSelected = Moment(this.selected);
+
+		// Map day
+		mSelected.date(mDay.date());
+		mSelected.month(mDay.month());
+		mSelected.year(mDay.year());
+
 		// Assign day
-		this.selected = day;
+		this.selected = mSelected.toDate();
 	}
 
 	/**
@@ -281,8 +327,18 @@ export class DatepickerComponent implements ControlValueAccessor {
 	 * @description Confirm date
 	 */
 	private async confirm(): Promise<void> {
+		// First get selected as moment
+		const mSelected = Moment(this.selected);
+
+		// Check for time
+		if (this.config.allowTime) {
+			// Set time
+			mSelected.hours(Number(this.hoursInputRef?.nativeElement?.value));
+			mSelected.minutes(Number(this.minutesInputRef?.nativeElement?.value));
+		}
+
 		// Assign value
-		this.value = Moment(this.selected).toDate();
+		this.value = mSelected.toDate();
 
 		// Close dialog
 		await this.close();

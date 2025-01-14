@@ -25,4 +25,10 @@ export interface IDatepickerConfig {
      * selected date
      */
     allowClear?: boolean;
+
+    /**
+     * Allow time
+     * @description Allow user to set time
+     */
+    allowTime?: boolean;
 }

@@ -16,6 +16,7 @@ import { DatepickerValueDirective } from "./directives/value.directive";
 import { DatepickerCancelDirective } from "./directives/cancel.directive";
 import { DatepickerConfirmDirective } from "./directives/confirm.directive";
 import { DatepickerClearDirective } from "./directives/clear.directive";
+import { DatepickerTodayDirective } from "./directives/today.directive";
 
 // Pipes
 import { DatepickerFormatPipe } from "./pipes/format.pipe";
@@ -36,6 +37,7 @@ import { DatepickerFormatPipe } from "./pipes/format.pipe";
 		DatepickerCancelDirective,
 		DatepickerConfirmDirective,
 		DatepickerClearDirective,
+		DatepickerTodayDirective,
 		DatepickerFormatPipe
 	],
 	exports: [
@@ -45,7 +47,8 @@ import { DatepickerFormatPipe } from "./pipes/format.pipe";
 		DatepickerValueDirective,
 		DatepickerCancelDirective,
 		DatepickerConfirmDirective,
-		DatepickerClearDirective
+		DatepickerClearDirective,
+		DatepickerTodayDirective
 	]
 })
 export class DatepickerModule { }
