@@ -113,6 +113,9 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 	// Iterable differ
 	private _iterableDiffer: IterableDiffer<any>;
 
+	// Click timer
+	private clickTimer: any;
+
 	// Total height
 	public totalHeight: number = 0;
 	public startNode: number = 0;
@@ -358,8 +361,14 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 			return;
 		}
 
-		// Emit row click event
-		this.rowClick.emit({ item, index });
+		// Check for double click
+		if (!this._config.allowRowDoubleClick) {
+			// Emit row click event and do nothing else
+			return this.rowClick.emit({ item, index });
+		}
+
+		// Set new timer to emit the click
+		this.clickTimer = setTimeout(() => this.rowClick.emit({ item, index }), this._config.doubleClickSafetyTimeout);
 	}
 
 	/**
@@ -374,6 +383,10 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 			// Do not emit row double click event
 			return;
 		}
+
+		// Clear timer if set
+		this.clickTimer && clearTimeout(this.clickTimer);
+		this.clickTimer = undefined;
 
 		// Emit row double click event
 		this.rowDoubleClick.emit({ item, index });

@@ -8,5 +8,7 @@ export var tableConfigDefault: ITableConfig<any> = {
     // Track record by default function
     trackRecordBy: (index: number, item: any) => item,
     // Allow rock click
-    allowRowClick: true
+    allowRowClick: true,
+    // Double click safety time out
+    doubleClickSafetyTimeout: 200
 }

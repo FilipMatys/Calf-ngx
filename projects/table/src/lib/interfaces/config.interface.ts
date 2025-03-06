@@ -39,4 +39,10 @@ export interface ITableConfig<T> {
      * @description Virtual scroll configuration
      */
     virtualScroll?: ITableVirtualScroll;
+
+    /**
+     * Double click safety timeout
+     * @description Safety timeout for double click.
+     */
+    doubleClickSafetyTimeout?: number;
 }
