@@ -368,7 +368,13 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 		}
 
 		// Set new timer to emit the click
-		this.clickTimer = setTimeout(() => this.rowClick.emit({ item, index }), this._config.doubleClickSafetyTimeout);
+		this.clickTimer = setTimeout(() => {
+			// Check if click timer is set
+			if (!this.clickTimer) return;
+
+			// Emit row click
+			this.rowClick.emit({ item, index });
+		}, this._config.doubleClickSafetyTimeout);
 	}
 
 	/**
