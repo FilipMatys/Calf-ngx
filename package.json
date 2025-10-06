@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build:prod:tooltip": "ng build tooltip --configuration=production"
+    "build:prod:tooltip": "ng build tooltip --configuration=production",
+    "build:prod:table": "ng build table --configuration=production"
   },
   "private": true,
   "dependencies": {
