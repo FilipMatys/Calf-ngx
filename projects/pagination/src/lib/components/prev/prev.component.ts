@@ -3,7 +3,8 @@ import { Component, HostListener, Output, EventEmitter, HostBinding } from "@ang
 
 @Component({
     selector: "ngx-pagination-prev",
-    template: "<ng-content></ng-content>"
+    template: "<ng-content></ng-content>",
+    standalone: false
 })
 export class PaginationPrevComponent {
 

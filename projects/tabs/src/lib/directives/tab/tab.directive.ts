@@ -6,7 +6,8 @@ import { TabLabelDirective } from "../label/label.directive";
 import { TabContentDirective } from "../content/content.directive";
 
 @Directive({
-    selector: "[ngxTab]"
+    selector: "[ngxTab]",
+    standalone: false
 })
 export class TabDirective {
 

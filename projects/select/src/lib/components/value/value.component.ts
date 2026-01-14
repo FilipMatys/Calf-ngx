@@ -4,7 +4,8 @@ import { Component, HostBinding } from "@angular/core";
 @Component({
     selector: "ngx-select-value",
     template: "<ng-content></ng-content>",
-    styleUrls: ["./value.component.scss"]
+    styleUrls: ["./value.component.scss"],
+    standalone: false
 })
 export class SelectValueComponent {
 

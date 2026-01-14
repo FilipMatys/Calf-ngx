@@ -2,7 +2,8 @@
 import { Directive } from "@angular/core";
 
 @Directive({
-    selector: "[ngxHeaderDefinition]"
+    selector: "[ngxHeaderDefinition]",
+    standalone: false
 })
 export class TableHeaderDefinitionDirective {
 

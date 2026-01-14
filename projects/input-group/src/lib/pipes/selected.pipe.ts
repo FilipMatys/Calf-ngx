@@ -7,7 +7,10 @@ import { IInputGroupConfig } from "../interfaces/config.interface";
 // Enums
 import { InputGroupMode } from "../enums/mode.enum";
 
-@Pipe({ name: "selected" })
+@Pipe({
+    name: "selected",
+    standalone: false
+})
 export class InputGroupSelectedPipe implements PipeTransform {
 
     /**

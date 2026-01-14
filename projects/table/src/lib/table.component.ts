@@ -25,9 +25,10 @@ import { TableEmptyDefinitionDirective } from "./directives/empty/empty-definiti
 import { TableHeaderComponent } from "./components/header/header.component";
 
 @Component({
-	selector: "ngx-table",
-	templateUrl: "./table.component.html",
-	styleUrls: ["./table.component.scss"]
+    selector: "ngx-table",
+    templateUrl: "./table.component.html",
+    styleUrls: ["./table.component.scss"],
+    standalone: false
 })
 export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, DoCheck {
 

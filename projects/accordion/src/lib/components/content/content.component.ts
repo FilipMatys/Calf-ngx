@@ -3,6 +3,7 @@ import { Component } from "@angular/core";
 
 @Component({
     selector: "ngx-accordion-content",
-    template: "<ng-content></ng-content>"
+    template: "<ng-content></ng-content>",
+    standalone: false
 })
 export class AccordionContentComponent {}

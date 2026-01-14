@@ -11,7 +11,8 @@ import { TreeNodeContentDirective } from "../../directives/content/content.direc
 @Component({
     selector: "ngx-tree-node",
     templateUrl: "./node.component.html",
-    styleUrls: ["./node.component.scss"]
+    styleUrls: ["./node.component.scss"],
+    standalone: false
 })
 export class TreeNodeComponent {
 

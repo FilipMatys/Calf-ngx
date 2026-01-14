@@ -12,7 +12,8 @@ import { IDatepickerFormatter } from "../../interfaces/formatter.interface";
 @Component({
     selector: "ngx-datepicker-months",
     templateUrl: "./months.component.html",
-    styleUrls: ["./months.component.scss"]
+    styleUrls: ["./months.component.scss"],
+    standalone: false
 })
 export class DatepickerMonthsComponent implements OnInit {
 

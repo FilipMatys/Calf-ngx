@@ -9,7 +9,8 @@ import { IDatepickerFormatter } from "../../interfaces/formatter.interface";
 @Component({
     selector: "ngx-datepicker-years",
     templateUrl: "./years.component.html",
-    styleUrls: ["./years.component.scss"]
+    styleUrls: ["./years.component.scss"],
+    standalone: false
 })
 export class DatepickerYearsComponent implements OnInit {
 

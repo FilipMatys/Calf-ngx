@@ -11,7 +11,8 @@ import { TableComponent } from "../../table.component";
 @Component({
     selector: ".ngx-table-header",
     templateUrl: "./header.component.html",
-    styleUrls: ["./header.component.scss"]
+    styleUrls: ["./header.component.scss"],
+    standalone: false
 })
 export class TableHeaderComponent implements OnInit, OnDestroy {
 

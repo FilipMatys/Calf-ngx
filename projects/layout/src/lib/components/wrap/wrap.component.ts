@@ -7,7 +7,8 @@ import { Orientation } from "../../enums/orientation.enum";
 @Component({
     selector: "ngx-wrap-layout",
     templateUrl: "./wrap.component.html",
-    styleUrls: ["./wrap.component.scss"]
+    styleUrls: ["./wrap.component.scss"],
+    standalone: false
 })
 export class WrapComponent {
 

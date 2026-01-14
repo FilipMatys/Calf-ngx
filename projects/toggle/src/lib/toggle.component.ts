@@ -11,16 +11,17 @@ import { ToggleInactiveDirective } from "./directives/inactive.directive";
 import { ToggleIndeterminateDirective } from "./directives/indeterminate.directive";
 
 @Component({
-	selector: "ngx-toggle",
-	templateUrl: "./toggle.component.html",
-	styleUrls: ["./toggle.component.scss"],
-	providers: [
-		{
-			provide: NG_VALUE_ACCESSOR,
-			useExisting: forwardRef(() => ToggleComponent),
-			multi: true
-		}
-	]
+    selector: "ngx-toggle",
+    templateUrl: "./toggle.component.html",
+    styleUrls: ["./toggle.component.scss"],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => ToggleComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class ToggleComponent implements ControlValueAccessor {
 

@@ -3,7 +3,8 @@ import { Component, HostBinding } from "@angular/core";
 
 @Component({
     selector: "ngx-select-clear",
-    templateUrl: "./clear.component.html"
+    templateUrl: "./clear.component.html",
+    standalone: false
 })
 export class SelectClearComponent {
 

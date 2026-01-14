@@ -3,7 +3,8 @@ import { Component, EventEmitter, Output, HostListener, HostBinding } from "@ang
 
 @Component({
     selector: "ngx-pagination-last",
-    template: "<ng-content></ng-content>"
+    template: "<ng-content></ng-content>",
+    standalone: false
 })
 export class PaginationLastComponent {
 

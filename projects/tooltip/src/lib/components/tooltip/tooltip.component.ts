@@ -7,7 +7,8 @@ import { TooltipCloseDirective } from "../../directives/close.directive";
 @Component({
     selector: "ngx-tooltip",
     templateUrl: "./tooltip.component.html",
-    styleUrls: ["./tooltip.component.scss"]
+    styleUrls: ["./tooltip.component.scss"],
+    standalone: false
 })
 export class TooltipComponent {
 

@@ -8,6 +8,7 @@ export interface ISelectOptionContext<T> {
 }
 
 @Directive({
-    selector: '[ngxSelectOption]'
+    selector: '[ngxSelectOption]',
+    standalone: false
 })
 export class SelectOptionDirective {}

@@ -11,7 +11,8 @@ import { AccordionComponent } from "../../accordion.component";
         <ng-container *ngIf="isActive">
             <ng-content select="ngx-accordion-content"></ng-content>
         </ng-container>
-    `
+    `,
+    standalone: false
 })
 export class AccordionItemComponent implements OnInit, OnDestroy {
 

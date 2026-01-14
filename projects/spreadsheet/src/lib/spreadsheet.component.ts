@@ -28,9 +28,10 @@ import { SpreadsheetCellComponent } from "./components/cell/cell.component";
 
 
 @Component({
-	selector: "ngx-spreadsheet",
-	templateUrl: "./spreadsheet.component.html",
-	styleUrls: ["./spreadsheet.component.scss"]
+    selector: "ngx-spreadsheet",
+    templateUrl: "./spreadsheet.component.html",
+    styleUrls: ["./spreadsheet.component.scss"],
+    standalone: false
 })
 export class SpreadsheetComponent implements OnInit, OnDestroy {
 

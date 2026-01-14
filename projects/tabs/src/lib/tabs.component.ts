@@ -9,8 +9,9 @@ import { IActiveTabChangeEvent } from "./interfaces/active-tab-change-event.inte
 import { TabContentOutlet } from "./outlets/content/content.outlet";
 
 @Component({
-	selector: 'ngx-tabs',
-	templateUrl: "./tabs.component.html"
+    selector: 'ngx-tabs',
+    templateUrl: "./tabs.component.html",
+    standalone: false
 })
 export class TabsComponent implements AfterContentInit {
 

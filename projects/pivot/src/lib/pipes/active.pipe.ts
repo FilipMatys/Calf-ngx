@@ -4,7 +4,10 @@ import { Pipe, PipeTransform } from "@angular/core";
 // Interfaces
 import { IPivotColumns } from "../interfaces/columns.interface";
 
-@Pipe({ name: "active" })
+@Pipe({
+    name: "active",
+    standalone: false
+})
 export class PivotActivePipe implements PipeTransform {
 
     /**

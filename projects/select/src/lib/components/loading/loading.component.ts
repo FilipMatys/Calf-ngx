@@ -4,7 +4,8 @@ import { Component, HostBinding } from "@angular/core";
 @Component({
     selector: "ngx-select-loading",
     template: "<ng-content></ng-content>",
-    styleUrls: ["./loading.component.scss"]
+    styleUrls: ["./loading.component.scss"],
+    standalone: false
 })
 export class SelectLoadingComponent {
 

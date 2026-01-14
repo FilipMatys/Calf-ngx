@@ -8,8 +8,9 @@ import { IIconModuleConfig } from './interfaces/icon.interfaces';
 import { ICON_CONFIG } from './tokens/config.token';
 
 @Component({
-  selector: 'ngx-icon',
-  templateUrl: "./icon.component.html"
+    selector: 'ngx-icon',
+    templateUrl: "./icon.component.html",
+    standalone: false
 })
 export class IconComponent {
 

@@ -2,6 +2,7 @@
 import { Directive } from "@angular/core";
 
 @Directive({
-    selector: "[ngxTooltipClose]"
+    selector: "[ngxTooltipClose]",
+    standalone: false
 })
 export class TooltipCloseDirective { }

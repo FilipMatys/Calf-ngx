@@ -2,6 +2,7 @@
 import { Directive } from "@angular/core";
 
 @Directive({
-    selector: "[ngxTreeNodeContent]"
+    selector: "[ngxTreeNodeContent]",
+    standalone: false
 })
 export class TreeNodeContentDirective {}

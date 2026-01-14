@@ -12,17 +12,18 @@ import { InputGroupMode } from "./enums/mode.enum";
 import { InputGroupOptionDirective } from "./directives/option.directive";
 
 @Component({
-	selector: "ngx-input-group",
-	templateUrl: "./input-group.component.html",
-	styleUrls: ["./input-group.component.scss"],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [
-		{
-			provide: NG_VALUE_ACCESSOR,
-			useExisting: forwardRef(() => InputGroupComponent),
-			multi: true
-		}
-	]
+    selector: "ngx-input-group",
+    templateUrl: "./input-group.component.html",
+    styleUrls: ["./input-group.component.scss"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => InputGroupComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class InputGroupComponent implements ControlValueAccessor {
 

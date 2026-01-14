@@ -13,9 +13,10 @@ import { IPivotNode } from "./interfaces/node.interface";
 import { PivotColumnType } from "./enums/column-type.enum";
 
 @Component({
-	selector: "ngx-pivot",
-	templateUrl: "./pivot.component.html",
-	styleUrls: ["./pivot.component.scss"]
+    selector: "ngx-pivot",
+    templateUrl: "./pivot.component.html",
+    styleUrls: ["./pivot.component.scss"],
+    standalone: false
 })
 export class PivotComponent implements OnChanges {
 

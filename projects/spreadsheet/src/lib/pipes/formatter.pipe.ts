@@ -6,7 +6,8 @@ import { ISpreadsheetFormatterFunction } from "../interfaces/formatter-function.
 
 @Pipe({
     name: "formatter",
-    pure: true
+    pure: true,
+    standalone: false
 })
 export class SpreadsheetFormatterPipe implements PipeTransform {
 

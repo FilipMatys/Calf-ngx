@@ -19,16 +19,17 @@ import { DatepickerClearDirective } from "./directives/clear.directive";
 import { DatepickerTodayDirective } from "./directives/today.directive";
 
 @Component({
-	selector: "ngx-datepicker",
-	templateUrl: "./datepicker.component.html",
-	styleUrls: ["./datepicker.component.scss"],
-	providers: [
-		{
-			provide: NG_VALUE_ACCESSOR,
-			useExisting: forwardRef(() => DatepickerComponent),
-			multi: true
-		}
-	]
+    selector: "ngx-datepicker",
+    templateUrl: "./datepicker.component.html",
+    styleUrls: ["./datepicker.component.scss"],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => DatepickerComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class DatepickerComponent implements ControlValueAccessor {
 

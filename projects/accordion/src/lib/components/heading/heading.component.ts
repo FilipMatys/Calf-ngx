@@ -6,7 +6,8 @@ import { AccordionItemComponent } from "../item/item.component";
 
 @Component({
     selector: "ngx-accordion-heading",
-    template: "<ng-content></ng-content>"
+    template: "<ng-content></ng-content>",
+    standalone: false
 })
 export class AccordionHeadingComponent {
 

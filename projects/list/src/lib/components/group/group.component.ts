@@ -4,6 +4,7 @@ import { Component } from "@angular/core";
 @Component({
     selector: "ngx-list-group",
     template: "<ng-content></ng-content>",
-    styleUrls: ["./group.component.scss"]
+    styleUrls: ["./group.component.scss"],
+    standalone: false
 })
 export class ListGroupComponent {}

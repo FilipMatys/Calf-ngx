@@ -2,6 +2,7 @@
 import { Directive } from "@angular/core";
 
 @Directive({
-    selector: "[ngxExpansionDefinition]"
+    selector: "[ngxExpansionDefinition]",
+    standalone: false
 })
 export class TableExpansionDefinitionDirective {}

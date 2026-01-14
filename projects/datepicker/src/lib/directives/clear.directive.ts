@@ -2,6 +2,7 @@
 import { Directive } from "@angular/core";
 
 @Directive({
-    selector: "[ngxDatepickerClear]"
+    selector: "[ngxDatepickerClear]",
+    standalone: false
 })
 export class DatepickerClearDirective {}

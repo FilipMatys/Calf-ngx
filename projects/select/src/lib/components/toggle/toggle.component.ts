@@ -3,7 +3,8 @@ import { Component, HostBinding } from "@angular/core";
 
 @Component({
     selector: "ngx-select-toggle",
-    template: "<ng-content></ng-content>"
+    template: "<ng-content></ng-content>",
+    standalone: false
 })
 export class SelectToggleComponent {
 

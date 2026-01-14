@@ -9,9 +9,10 @@ import { ITreeConfig } from "./interfaces/config.interface";
 import { TreeNodeContentDirective } from "./directives/content/content.directive";
 
 @Component({
-	selector: "ngx-tree",
-	templateUrl: "./tree.component.html",
-	styleUrls: ["./tree.component.scss"]
+    selector: "ngx-tree",
+    templateUrl: "./tree.component.html",
+    styleUrls: ["./tree.component.scss"],
+    standalone: false
 })
 export class TreeComponent {
 

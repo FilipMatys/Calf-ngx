@@ -3,7 +3,8 @@ import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
     name: "isUndefined",
-    pure: true
+    pure: true,
+    standalone: false
 })
 export class SelectIsUndefinedPipe implements PipeTransform {
 

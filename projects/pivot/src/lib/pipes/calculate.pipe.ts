@@ -4,7 +4,10 @@ import { Pipe, PipeTransform } from "@angular/core";
 // Interfaces
 import { PivotCalculateType } from "../enums/calculate-type.enum";
 
-@Pipe({ name: "calculate" })
+@Pipe({
+    name: "calculate",
+    standalone: false
+})
 export class PivotCalculatePipe implements PipeTransform {
 
     /**

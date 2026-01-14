@@ -3,6 +3,7 @@ import { Component } from "@angular/core";
 
 @Component({
     selector: "ngx-card-footer",
-    template: "<ng-content></ng-content>"
+    template: "<ng-content></ng-content>",
+    standalone: false
 })
 export class CardFooterComponent {}

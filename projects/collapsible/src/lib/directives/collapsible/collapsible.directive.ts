@@ -7,7 +7,8 @@ import { filter } from "rxjs/operators";
 import { CollapsibleService } from "../../collapsible.service";
 
 @Directive({
-    selector: "[ngxCollapsible]"
+    selector: "[ngxCollapsible]",
+    standalone: false
 })
 export class CollapsibleDirective implements OnInit, OnDestroy {
 

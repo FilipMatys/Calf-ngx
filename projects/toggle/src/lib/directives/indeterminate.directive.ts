@@ -1,8 +1,9 @@
 // External modules
 import { Directive, HostBinding } from "@angular/core";
 
-@Directive({ 
-    selector: "[ngxToggleIndeterminate]" 
+@Directive({
+    selector: "[ngxToggleIndeterminate]",
+    standalone: false
 })
 export class ToggleIndeterminateDirective {
 

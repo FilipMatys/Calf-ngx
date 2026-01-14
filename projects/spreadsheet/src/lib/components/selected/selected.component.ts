@@ -7,7 +7,8 @@ import { SpreadsheetCellComponent } from "../cell/cell.component";
 @Component({
     selector: "ngx-spreadsheet-selected",
     templateUrl: "./selected.component.html",
-    styleUrls: ["./selected.component.scss"]
+    styleUrls: ["./selected.component.scss"],
+    standalone: false
 })
 export class SpreadsheetSelectedComponent {
 

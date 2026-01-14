@@ -2,6 +2,7 @@
 import { Directive } from "@angular/core";
 
 @Directive({
-    selector: '[ngxSelectToggle]'
+    selector: '[ngxSelectToggle]',
+    standalone: false
 })
 export class SelectToggleDirective {}

@@ -7,7 +7,8 @@ import { Orientation } from "../../enums/orientation.enum";
 @Component({
     selector: "ngx-stack-layout",
     templateUrl: "./stack.component.html",
-    styleUrls: ["./stack.component.scss"]
+    styleUrls: ["./stack.component.scss"],
+    standalone: false
 })
 export class StackComponent {
 

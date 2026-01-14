@@ -5,7 +5,10 @@ import { Observable } from "rxjs";
 // Interfaces
 import { IDatepickerFormatter } from "../interfaces/formatter.interface";
 
-@Pipe({ name: "format" })
+@Pipe({
+    name: "format",
+    standalone: false
+})
 export class DatepickerFormatPipe implements PipeTransform {
 
     /**

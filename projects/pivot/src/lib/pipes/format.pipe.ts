@@ -4,7 +4,10 @@ import { Pipe, PipeTransform } from "@angular/core";
 // Interfaces
 import { IPivotFormatFn } from "../interfaces/format-fn.interface";
 
-@Pipe({ name: "format" })
+@Pipe({
+    name: "format",
+    standalone: false
+})
 export class PivotFormatPipe implements PipeTransform {
 
     /**

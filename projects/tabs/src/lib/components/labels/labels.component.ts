@@ -3,7 +3,8 @@ import { Component, HostBinding } from "@angular/core";
 
 @Component({
     selector: "ngx-tabs-labels",
-    template: "<ng-content select=\"ngx-tabs-label\"></ng-content>"
+    template: "<ng-content select=\"ngx-tabs-label\"></ng-content>",
+    standalone: false
 })
 export class TabsLabelsComponent {
 

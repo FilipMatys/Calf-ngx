@@ -12,15 +12,16 @@ import { PaginationPrevComponent } from "./components/prev/prev.component";
 import { PaginationNextComponent } from "./components/next/next.component";
 
 @Component({
-	selector: 'ngx-pagination',
-	templateUrl: "./pagination.component.html",
-	providers: [
-		{
-			provide: NG_VALUE_ACCESSOR,
-			useExisting: forwardRef(() => PaginationComponent),
-			multi: true
-		}
-	]
+    selector: 'ngx-pagination',
+    templateUrl: "./pagination.component.html",
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => PaginationComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class PaginationComponent implements OnChanges, AfterContentInit {
 

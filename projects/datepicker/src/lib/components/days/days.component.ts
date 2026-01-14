@@ -12,7 +12,8 @@ import { IDatepickerWeek } from "../../interfaces/week.interface";
 @Component({
     selector: "ngx-datepicker-days",
     templateUrl: "./days.component.html",
-    styleUrls: ["./days.component.scss"]
+    styleUrls: ["./days.component.scss"],
+    standalone: false
 })
 export class DatepickerDaysComponent implements OnChanges {
 

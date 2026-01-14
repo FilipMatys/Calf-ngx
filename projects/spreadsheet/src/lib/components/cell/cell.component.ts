@@ -15,7 +15,8 @@ import { ISpreadsheetStyle } from "../../interfaces/style.interface";
 @Component({
     selector: "[ngxSpreadsheetCell]",
     templateUrl: "./cell.component.html",
-    styleUrls: ["./cell.component.scss"]
+    styleUrls: ["./cell.component.scss"],
+    standalone: false
 })
 export class SpreadsheetCellComponent<TRecord = any> {
 

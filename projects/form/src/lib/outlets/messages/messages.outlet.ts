@@ -1,7 +1,10 @@
 // External modules
 import { Directive, Input, ViewContainerRef } from "@angular/core";
 
-@Directive({ selector: "[ngxFormMessagesOutlet]" })
+@Directive({
+    selector: "[ngxFormMessagesOutlet]",
+    standalone: false
+})
 export class FormMessagesOutletDirective {
 
     @Input("id")

@@ -8,6 +8,7 @@ import { TableFooterDefinitionDirective } from "../footer/footer-definition.dire
 
 @Directive({
     selector: "[ngxColumnDefinition]",
+    standalone: false
 })
 export class TableColumnDefinitionDirective {
 

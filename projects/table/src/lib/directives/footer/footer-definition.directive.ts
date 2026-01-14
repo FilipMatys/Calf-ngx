@@ -2,7 +2,8 @@
 import { Directive } from "@angular/core";
 
 @Directive({
-    selector: "[ngxFooterDefinition]"
+    selector: "[ngxFooterDefinition]",
+    standalone: false
 })
 export class TableFooterDefinitionDirective {
 

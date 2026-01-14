@@ -2,7 +2,8 @@
 import { Directive, Input } from "@angular/core";
 
 @Directive({
-    selector: "[ngxTabLabel]"
+    selector: "[ngxTabLabel]",
+    standalone: false
 })
 export class TabLabelDirective {
 

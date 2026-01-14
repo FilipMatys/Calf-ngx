@@ -1,5 +1,8 @@
 // External modules
 import { Directive } from "@angular/core";
 
-@Directive({ selector: "[ngxDatepickerNext]" })
+@Directive({
+    selector: "[ngxDatepickerNext]",
+    standalone: false
+})
 export class DatepickerNextDirective {}

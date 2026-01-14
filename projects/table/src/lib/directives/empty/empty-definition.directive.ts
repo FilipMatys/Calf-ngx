@@ -2,6 +2,7 @@
 import { Directive } from "@angular/core";
 
 @Directive({
-    selector: "[ngxEmptyDefinition]"
+    selector: "[ngxEmptyDefinition]",
+    standalone: false
 })
 export class TableEmptyDefinitionDirective {}

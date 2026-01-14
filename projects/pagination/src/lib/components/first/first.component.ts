@@ -3,7 +3,8 @@ import { Component, EventEmitter, Output, HostListener, HostBinding } from "@ang
 
 @Component({
     selector: "ngx-pagination-first",
-    template: "<ng-content></ng-content>"
+    template: "<ng-content></ng-content>",
+    standalone: false
 })
 export class PaginationFirstComponent {
 

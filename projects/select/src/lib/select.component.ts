@@ -23,16 +23,17 @@ import { SelectToggleDirective } from "./directives/toggle.directive";
 import { SelectOptionComponent } from "./components/option/option.component";
 
 @Component({
-	selector: "ngx-select",
-	templateUrl: "./select.component.html",
-	styleUrls: ["./select.component.scss"],
-	providers: [
-		{
-			provide: NG_VALUE_ACCESSOR,
-			useExisting: forwardRef(() => SelectComponent),
-			multi: true
-		}
-	],
+    selector: "ngx-select",
+    templateUrl: "./select.component.html",
+    styleUrls: ["./select.component.scss"],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => SelectComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class SelectComponent implements ControlValueAccessor, OnInit {
 

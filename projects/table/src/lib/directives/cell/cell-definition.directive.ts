@@ -2,7 +2,8 @@
 import { Directive } from "@angular/core";
 
 @Directive({
-    selector: "[ngxCellDefinition]"
+    selector: "[ngxCellDefinition]",
+    standalone: false
 })
 export class TableCellDefinitionDirective {
 

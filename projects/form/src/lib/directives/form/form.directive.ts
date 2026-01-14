@@ -13,7 +13,10 @@ import { FormMessageDirective } from "../message/message.directive";
 // Outlets
 import { FormMessagesOutletDirective } from "../../outlets/messages/messages.outlet";
 
-@Directive({ selector: "[ngxForm]" })
+@Directive({
+    selector: "[ngxForm]",
+    standalone: false
+})
 export class FormDirective implements AfterContentInit, OnDestroy {
 
     @HostBinding("class.ngx-form")

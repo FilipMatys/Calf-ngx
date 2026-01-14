@@ -8,6 +8,7 @@ export interface ISelectClearContext<T> {
 }
 
 @Directive({
-    selector: '[ngxSelectClear]'
+    selector: '[ngxSelectClear]',
+    standalone: false
 })
 export class SelectClearDirective {}

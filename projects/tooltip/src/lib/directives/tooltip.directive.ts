@@ -5,7 +5,8 @@ import { Directive, HostListener, Input } from "@angular/core";
 import { TooltipComponent } from "../components/tooltip/tooltip.component";
 
 @Directive({
-    selector: "[ngx-tooltip]"
+    selector: "[ngx-tooltip]",
+    standalone: false
 })
 export class TooltipDirective {
 

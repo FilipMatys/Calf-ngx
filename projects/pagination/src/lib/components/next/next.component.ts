@@ -3,7 +3,8 @@ import { Component, HostListener, EventEmitter, Output, HostBinding } from "@ang
 
 @Component({
     selector: "ngx-pagination-next",
-    template: "<ng-content></ng-content>"
+    template: "<ng-content></ng-content>",
+    standalone: false
 })
 export class PaginationNextComponent {
 

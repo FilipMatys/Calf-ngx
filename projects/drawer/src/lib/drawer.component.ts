@@ -6,9 +6,10 @@ import { BehaviorSubject, fromEvent, Observable, Subscription } from "rxjs";
 import { DrawerState } from "./enums/state.enum";
 
 @Component({
-	selector: "ngx-drawer",
-	templateUrl: "./drawer.component.html",
-	styleUrls: ["./drawer.component.scss"]
+    selector: "ngx-drawer",
+    templateUrl: "./drawer.component.html",
+    styleUrls: ["./drawer.component.scss"],
+    standalone: false
 })
 export class DrawerComponent implements OnInit, OnDestroy {
 

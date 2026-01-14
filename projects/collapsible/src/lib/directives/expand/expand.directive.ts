@@ -5,7 +5,8 @@ import { Directive, TemplateRef, ViewContainerRef, Input, Renderer2, HostBinding
 import { CollapsibleService } from "../../collapsible.service";
 
 @Directive({
-    selector: "[ngxCollapsibleExpand]"
+    selector: "[ngxCollapsibleExpand]",
+    standalone: false
 })
 export class ExpandDirective {
 

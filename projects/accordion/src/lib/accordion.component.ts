@@ -5,9 +5,10 @@ import { Component, Input } from '@angular/core';
 import { AccordionItemComponent } from "./components/item/item.component";
 
 @Component({
-  selector: 'ngx-accordion',
-  template: '<ng-content select="ngx-accordion-item"></ng-content>',
-  styles: []
+    selector: 'ngx-accordion',
+    template: '<ng-content select="ngx-accordion-item"></ng-content>',
+    styles: [],
+    standalone: false
 })
 export class AccordionComponent {
 

@@ -2,7 +2,8 @@
 import { Directive, Input } from "@angular/core";
 
 @Directive({
-    selector: "[ngxTabContent]"
+    selector: "[ngxTabContent]",
+    standalone: false
 })
 export class TabContentDirective {
 
