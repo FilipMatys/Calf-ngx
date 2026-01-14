@@ -114,6 +114,15 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 	// Scroll container scrolled subscription
 	private _scrollContainerScrolledSubscription: Subscription;
 
+	// Virtual scrolling optimization properties
+	private _rafId: number | null = null;
+	private _cachedMeasurements: {
+		headHeight?: number;
+		footHeight?: number;
+		containerHeight?: number;
+		lastMeasureTime?: number;
+	} = {};
+
 	// Iterable differ
 	private _iterableDiffer: IterableDiffer<any>;
 
@@ -159,7 +168,7 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 
 		// Update headers
 		this.updateHeaders();
-		
+
 		// Trigger change detection
 		this.changeDetectorRef.markForCheck();
 	}
@@ -187,7 +196,7 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 		finally {
 			// Finally assign config
 			this._config = config;
-			
+
 			// Trigger change detection when config changes
 			this.changeDetectorRef.markForCheck();
 		}
@@ -276,8 +285,8 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 	 */
 	public trackByItem = (index: number, item: any): any => {
 		// Use custom trackBy function if provided, otherwise use index + startNode
-		return this.config.trackRecordBy ? 
-			this.config.trackRecordBy(index + this.startNode, item) : 
+		return this.config.trackRecordBy ?
+			this.config.trackRecordBy(index + this.startNode, item) :
 			index + this.startNode;
 	}
 
@@ -342,6 +351,12 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 	 * On destroy hook
 	 */
 	public ngOnDestroy(): void {
+		// Cancel any pending RAF
+		if (this._rafId !== null) {
+			cancelAnimationFrame(this._rafId);
+			this._rafId = null;
+		}
+
 		// Unsubscribe from subscriptions
 		this._scrollContainerScrolledSubscription && this._scrollContainerScrolledSubscription.unsubscribe();
 	}
@@ -495,112 +510,187 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 	}
 
 	/**
-	 * Handle scroll container scroll
+	 * Handle scroll container scroll - Optimized version
 	 * @param event
 	 * @param dataChanged 
 	 */
-	private async handleScrollContainerScroll(event: Event, dataChanged: boolean = false): Promise<void> {
+	private async handleScrollContainerScroll(event: Event | null, dataChanged: boolean = false): Promise<void> {
 		// Make sure virtual scroll is allowed
 		if (!this._config.virtualScroll || !this._config.virtualScroll.allow) {
-			// Do nothing
 			return;
 		}
 
-		// Get head height
-		const headHeight: number = this.headElementRef ? this.headElementRef.nativeElement.clientHeight : 0;
-		const footHeight: number = this.footElementRef ? this.footElementRef.nativeElement.clientHeight : 0;
+		// Cancel previous RAF if pending
+		if (this._rafId !== null) {
+			cancelAnimationFrame(this._rafId);
+		}
 
-		// Get scroll position and height
+		// Batch updates using requestAnimationFrame for smooth performance
+		this._rafId = requestAnimationFrame(() => {
+			this._rafId = null;
+			this.performVirtualScrollUpdate(dataChanged);
+		});
+	}
+
+	/**
+	 * Perform the actual virtual scroll update with optimizations
+	 * @param dataChanged 
+	 */
+	private performVirtualScrollUpdate(dataChanged: boolean): void {
+		const config = this._config.virtualScroll!;
+		const now = performance.now();
+
+		// Cache measurements for better performance
+		const measurements = this.getMeasurements(now);
 		const scrollPosition = this._scrollContainer.scrollTop;
 		const scrollHeight = this._scrollContainer.offsetHeight;
 
-		// Get total height needed for items (including header and footer)
-		const totalHeight: number = (this.data || []).length * this._config.virtualScroll.rowHeight + headHeight + footHeight;
-		// Get padding
-		const nodePadding: number = this._config.virtualScroll.paddingRowsCount;
-		// Get start node
-		const startNode: number = Math.max(0, Math.floor(scrollPosition / this.config.virtualScroll.rowHeight) - nodePadding);
+		// Calculate virtual scrolling parameters
+		const dataLength = (this.data || []).length;
+		const totalHeight = dataLength * config.rowHeight + measurements.headHeight + measurements.footHeight;
+		const nodePadding = config.paddingRowsCount || 0;
+		const startNode = Math.max(0, Math.floor(scrollPosition / config.rowHeight) - nodePadding);
+		const visibleNodesCount = Math.min(
+			Math.ceil(scrollHeight / config.rowHeight) + 2 * nodePadding,
+			dataLength - startNode
+		);
+		const offsetY = startNode * config.rowHeight;
 
-		// Get number of visible items
-		const visibleNodesCount = Math.ceil(scrollHeight / this.config.virtualScroll.rowHeight) + 2 * nodePadding;
+		// Track what changed to minimize updates
+		const changes = {
+			totalHeight: this.totalHeight !== totalHeight,
+			startNode: this.startNode !== startNode,
+			visibleCount: this.visibleNodesCount !== visibleNodesCount,
+			offset: this.offsetY !== offsetY
+		};
 
-		// Get offset
-		const offsetY = startNode * this.config.virtualScroll.rowHeight;
+		// Update internal state
+		this.totalHeight = totalHeight;
+		this.startNode = startNode;
+		this.visibleNodesCount = visibleNodesCount;
+		this.offsetY = offsetY;
 
-		// Changed flags
-		let totalHeightChanged: boolean = false;
-		let offsetChanged: boolean = false;
-		let startNodeChanged: boolean = false;
-		let visibleNodesCountChanged: boolean = false;
+		// Batch DOM updates for better performance
+		this.batchDomUpdates(changes, measurements, scrollPosition, scrollHeight, visibleNodesCount, startNode);
 
-		// Check total height
-		if (totalHeightChanged = this.totalHeight !== totalHeight) {
-			// Set total height
-			this.totalHeight = totalHeight;
+		// Update data slice if needed
+		if (changes.startNode || changes.visibleCount || dataChanged) {
+			this.updateDataSlice(startNode, visibleNodesCount);
+		}
+	}
+
+	/**
+	 * Get cached measurements with invalidation
+	 * @param currentTime 
+	 */
+	private getMeasurements(currentTime: number) {
+		// Invalidate cache every 1000ms or on first call
+		const shouldMeasure = !this._cachedMeasurements.lastMeasureTime ||
+			(currentTime - this._cachedMeasurements.lastMeasureTime) > 1000;
+
+		if (shouldMeasure) {
+			this._cachedMeasurements = {
+				headHeight: this.headElementRef?.nativeElement.clientHeight || 0,
+				footHeight: this.footElementRef?.nativeElement.clientHeight || 0,
+				containerHeight: this._scrollContainer.offsetHeight,
+				lastMeasureTime: currentTime
+			};
 		}
 
-		// Check start node
-		if (startNodeChanged = this.startNode !== startNode) {
-			// Set start node
-			this.startNode = startNode;
-		}
+		return this._cachedMeasurements;
+	}
 
-		// Check visible nodes count
-		if (visibleNodesCountChanged = this.visibleNodesCount !== visibleNodesCount) {
-			// Assign visible nodes count
-			this.visibleNodesCount = visibleNodesCount;
-		}
+	/**
+	 * Batch DOM updates to minimize reflows
+	 * @param changes 
+	 * @param measurements 
+	 * @param scrollPosition 
+	 * @param scrollHeight 
+	 * @param visibleNodesCount 
+	 * @param startNode 
+	 */
+	private batchDomUpdates(
+		changes: any,
+		measurements: any,
+		scrollPosition: number,
+		scrollHeight: number,
+		visibleNodesCount: number,
+		startNode: number
+	): void {
+		const config = this._config.virtualScroll!;
+		const updates: (() => void)[] = [];
 
-		// Check offset
-		if (offsetChanged = this.offsetY !== offsetY) {
-			// Assign offset
-			this.offsetY = offsetY;
-		}
-
-		// Check if total height changed
-		if (totalHeightChanged) {
-			// Set new spacer height
-			this.renderer.setStyle(this._scrollSpacer, "height", `${totalHeight}px`);
-		}
-
-		// Check if offset changed
-		if (offsetChanged) {
-			// Update element offset
-			this.renderer.setStyle(this.elementRef.nativeElement, "transform", `translateY(${offsetY}px)`);
-		}
-
-		// Check for sticky head
-		if (this._config.virtualScroll.stickyHead) {
-			// Calculate offset
-			const headOffsetY = Math.max(scrollPosition - offsetY, 0);
-
-			// Set offset to head
-			this.renderer.setStyle(this.headElementRef.nativeElement, "transform", `translateY(${headOffsetY}px)`);
-		}
-
-		// Check for sticky foot
-		if (this._config.virtualScroll.stickyFoot && this.footElementRef) {
-			// Get number of rendered items
-			const renderedCount = Math.min(visibleNodesCount, (this.data || []).length - startNode);
-
-			// Calculate offset
-			const footOffsetY = Math.min((scrollPosition + scrollHeight) - (offsetY + headHeight + footHeight + renderedCount * this._config.virtualScroll.rowHeight));
-
-			// Set offset to foot
-			this.renderer.setStyle(this.footElementRef.nativeElement, "transform", `translateY(${footOffsetY}px)`);
-		}
-
-		// Check for start node and visible nodes count changes
-		if (startNodeChanged || visibleNodesCountChanged || dataChanged) {
-			// Run code inside Angular zone
-			this.ngZone.run(() => {
-				// Assign items
-				this._items = (this.data || []).slice(startNode, startNode + visibleNodesCount);
-
-				// Mark changes for check
-				this.changeDetectorRef.markForCheck();
+		// Spacer height update
+		if (changes.totalHeight) {
+			updates.push(() => {
+				this.renderer.setStyle(this._scrollSpacer, "height", `${this.totalHeight}px`);
 			});
 		}
+
+		// Main container transform
+		if (changes.offset) {
+			updates.push(() => {
+				this.renderer.setStyle(
+					this.elementRef.nativeElement,
+					"transform",
+					`translate3d(0, ${this.offsetY}px, 0)`
+				);
+			});
+		}
+
+		// Sticky header
+		if (config.stickyHead && this.headElementRef) {
+			const headOffsetY = Math.max(scrollPosition - this.offsetY, 0);
+			updates.push(() => {
+				this.renderer.setStyle(
+					this.headElementRef.nativeElement,
+					"transform",
+					`translate3d(0, ${headOffsetY}px, 0)`
+				);
+			});
+		}
+
+		// Sticky footer
+		if (config.stickyFoot && this.footElementRef) {
+			const renderedCount = Math.min(visibleNodesCount, (this.data || []).length - startNode);
+			const footOffsetY = Math.max(
+				0,
+				(scrollPosition + scrollHeight) -
+				(this.offsetY + measurements.headHeight + measurements.footHeight + renderedCount * config.rowHeight)
+			);
+			updates.push(() => {
+				this.renderer.setStyle(
+					this.footElementRef.nativeElement,
+					"transform",
+					`translate3d(0, ${footOffsetY}px, 0)`
+				);
+			});
+		}
+
+		// Execute all DOM updates in a batch
+		if (updates.length > 0) {
+			updates.forEach(update => update());
+		}
+	}
+
+	/**
+	 * Update the data slice for virtual scrolling
+	 * @param startNode 
+	 * @param visibleNodesCount 
+	 */
+	private updateDataSlice(startNode: number, visibleNodesCount: number): void {
+		// Only run inside Angular zone when we need to update the data
+		this.ngZone.run(() => {
+			// Calculate end index more precisely
+			const endIndex = Math.min(startNode + visibleNodesCount, (this.data || []).length);
+			const newItems = (this.data || []).slice(startNode, endIndex);
+
+			// Only update if the slice actually changed
+			if (!this.arraysEqual(this._items, newItems)) {
+				this._items = newItems;
+				this.changeDetectorRef.markForCheck();
+			}
+		});
 	}
 
 	/**
@@ -684,7 +774,7 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 		if (!this._columns || !this._columns.length) {
 			// Get new column definitions
 			const newOutput = this.columnDefinitions.toArray();
-			
+
 			// Only update if changed
 			if (!this.arraysEqual(this.outputColumnDefinitions, newOutput)) {
 				this.outputColumnDefinitions = newOutput;
@@ -715,15 +805,19 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 	}
 
 	/**
-	 * Check if two arrays of column definitions are equal
+	 * Check if two arrays are equal (works for both column definitions and items)
 	 * @param arr1 
 	 * @param arr2 
 	 */
-	private arraysEqual(arr1: TableColumnDefinitionDirective[], arr2: TableColumnDefinitionDirective[]): boolean {
+	private arraysEqual(arr1: any[], arr2: any[]): boolean {
+		if (!arr1 || !arr2) {
+			return arr1 === arr2;
+		}
+
 		if (arr1.length !== arr2.length) {
 			return false;
 		}
-		
+
 		return arr1.every((item, index) => item === arr2[index]);
 	}
 }
