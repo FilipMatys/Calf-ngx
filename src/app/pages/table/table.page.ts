@@ -5,7 +5,8 @@ import { IRowClickEvent, ITableConfig } from "table";
 @Component({
     selector: "page-table",
     templateUrl: "./table.page.html",
-    styleUrls: ["./table.page.scss"]
+    styleUrls: ["./table.page.scss"],
+    standalone: false
 })
 export class TablePage implements OnInit {
 

@@ -18,10 +18,10 @@ import { AppComponent } from './app.component';
 			// 	path: "drawer",
 			// 	loadChildren: () => import("./pages/drawer/drawer.module").then((m) => m.DrawerPageModule)
 			// },
-			// {
-			// 	path: "table",
-			// 	loadChildren: () => import("./pages/table/table.module").then((m) => m.TablePageModule)
-			// },
+			{
+				path: "table",
+				loadChildren: () => import("./pages/table/table.module").then((m) => m.TablePageModule)
+			},
 			// {
 			// 	path: "form",
 			// 	loadChildren: () => import("./pages/form/form.module").then((m) => m.FormPageModule)
@@ -46,10 +46,10 @@ import { AppComponent } from './app.component';
 			// 	path: "select",
 			// 	loadChildren: () => import("./pages/select/select.module").then((m) => m.SelectPageModule)
 			// },
-			{
-				path: "tooltip",
-				loadChildren: () => import("./pages/tooltip/tooltip.module").then((m) => m.TooltipPageModule)
-			},
+			// {
+			// 	path: "tooltip",
+			// 	loadChildren: () => import("./pages/tooltip/tooltip.module").then((m) => m.TooltipPageModule)
+			// },
 			// {
 			// 	path: "datepicker",
 			// 	loadChildren: () => import("./pages/datepicker/datepicker.module").then((m) => m.DatepickerPageModule)
