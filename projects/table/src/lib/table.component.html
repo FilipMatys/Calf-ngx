@@ -1,15 +1,15 @@
 <thead #head>
     <tr class="ngx-table-row ngx-table-row--header">
-        <ng-container *ngFor="let cDef of outputColumnDefinitions">
+        <ng-container *ngFor="let cDef of outputColumnDefinitions; trackBy: trackByColumn">
             <ng-container *ngTemplateOutlet="cDef.header"></ng-container>
         </ng-container>
     </tr>
 </thead>
 <ng-container *ngIf="(items || []).length; else empty">
     <tbody>
-        <ng-container *ngFor="let item of items; let idx = index; trackBy:config.trackRecordBy">
+        <ng-container *ngFor="let item of items; let idx = index; trackBy: trackByItem">
             <tr class="ngx-table-row ngx-table-row--data" [class.ngx-table-row--even]="!((idx + startNode) % 2)" [class.ngx-table-row--odd]="(idx + startNode) % 2" (click)="onRowClick($event, item, idx + startNode)" (dblclick)="onRowDoubleClick($event, item, idx + startNode)">
-                <ng-container *ngFor="let cDef of outputColumnDefinitions; let columnIndex = index">
+                <ng-container *ngFor="let cDef of outputColumnDefinitions; let columnIndex = index; trackBy: trackByColumn">
                     <ng-container *ngTemplateOutlet="cDef.cell; context: { $implicit: item, index: idx + startNode, columnIndex: columnIndex }">
                     </ng-container>
                 </ng-container>
@@ -22,7 +22,7 @@
     </tbody>
     <tfoot *ngIf="hasFooterDefinition" #foot>
         <tr class="ngx-table-row ngx-table-row--footer">
-            <ng-container *ngFor="let cDef of outputColumnDefinitions">
+            <ng-container *ngFor="let cDef of outputColumnDefinitions; trackBy: trackByColumn">
                 <ng-container *ngIf="cDef.footer; else defaultFooterTemplate">
                     <ng-container *ngTemplateOutlet="cDef.footer"></ng-container>
                 </ng-container>

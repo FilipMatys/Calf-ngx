@@ -1,5 +1,5 @@
 // External modules
-import { Component, Input, QueryList, ContentChildren, AfterContentChecked, EventEmitter, Output, HostBinding, Injector, TemplateRef, ContentChild, OnInit, NgZone, OnDestroy, Renderer2, DoCheck, IterableDiffers, IterableDiffer, ElementRef, ChangeDetectorRef, ViewChild } from "@angular/core";
+import { Component, Input, QueryList, ContentChildren, AfterContentChecked, EventEmitter, Output, HostBinding, Injector, TemplateRef, ContentChild, OnInit, NgZone, OnDestroy, Renderer2, DoCheck, IterableDiffers, IterableDiffer, ElementRef, ChangeDetectorRef, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { asapScheduler, fromEvent, Subscription } from "rxjs";
 import { auditTime, startWith } from "rxjs/operators";
 
@@ -28,7 +28,8 @@ import { TableHeaderComponent } from "./components/header/header.component";
 	selector: "ngx-table",
 	templateUrl: "./table.component.html",
 	styleUrls: ["./table.component.scss"],
-	standalone: false
+	standalone: false,
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, DoCheck {
 
@@ -61,10 +62,12 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 			// Set to be position relative
 			this.renderer.setStyle(this._scrollContainer, "position", "relative");
 
-			// Subscribe to scroll event
+			// Subscribe to scroll event with optimized throttling
 			this._scrollContainerScrolledSubscription = fromEvent(this._scrollContainer, "scroll")
-				.pipe(startWith(null!))
-				.pipe(auditTime(0, asapScheduler))
+				.pipe(
+					startWith(null!),
+					auditTime(16, asapScheduler) // ~60fps for smoother performance
+				)
 				.subscribe((event) => this.handleScrollContainerScroll(event));
 		});
 	};
@@ -138,15 +141,27 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 
 	@Input("sort")
 	public set sort(value: any[]) {
-		// Postpone resolution, because we need
-		// config to be set
-		Promise.resolve().then(() => {
-			// Assign value
-			this._sort = this.config.sort.mapSetFn(value);
+		// Check if config is available
+		if (!this._config || !this._config.sort) {
+			// Store value for later processing
+			setTimeout(() => {
+				if (this._config && this._config.sort) {
+					this._sort = this._config.sort.mapSetFn(value);
+					this.updateHeaders();
+					this.changeDetectorRef.markForCheck();
+				}
+			}, 0);
+			return;
+		}
 
-			// Update headers
-			this.updateHeaders();
-		});
+		// Assign value
+		this._sort = this.config.sort.mapSetFn(value);
+
+		// Update headers
+		this.updateHeaders();
+		
+		// Trigger change detection
+		this.changeDetectorRef.markForCheck();
 	}
 
 	// List of sort columns
@@ -172,6 +187,9 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 		finally {
 			// Finally assign config
 			this._config = config;
+			
+			// Trigger change detection when config changes
+			this.changeDetectorRef.markForCheck();
 		}
 	};
 
@@ -252,6 +270,27 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 	}
 
 	/**
+	 * Optimized trackBy function for items
+	 * @param index 
+	 * @param item 
+	 */
+	public trackByItem = (index: number, item: any): any => {
+		// Use custom trackBy function if provided, otherwise use index + startNode
+		return this.config.trackRecordBy ? 
+			this.config.trackRecordBy(index + this.startNode, item) : 
+			index + this.startNode;
+	}
+
+	/**
+	 * Optimized trackBy function for column definitions
+	 * @param index 
+	 * @param colDef 
+	 */
+	public trackByColumn = (index: number, colDef: TableColumnDefinitionDirective): any => {
+		return colDef.identifier || index;
+	}
+
+	/**
 	 * On init hook
 	 */
 	public ngOnInit(): void {
@@ -282,11 +321,15 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 	 */
 	public ngDoCheck(): void {
 		// Check if data changed
-		if (this._iterableDiffer.diff(this.data)) {
+		const dataChanges = this._iterableDiffer.diff(this.data);
+		if (dataChanges) {
 			// Check for virtual scroll config
 			if (!this._config.virtualScroll || !this._config.virtualScroll.allow) {
-				// Assign data
-				this._items = this.data;
+				// Assign data only if it actually changed
+				if (this._items !== this.data) {
+					this._items = this.data;
+					this.changeDetectorRef.markForCheck();
+				}
 			}
 			else {
 				// Emit scroll handler
@@ -629,14 +672,25 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 	private build() {
 		// Check if there are any column definitions
 		if (!this.columnDefinitions) {
-			// Reset output
-			return this.outputColumnDefinitions = [];
+			// Reset output only if changed
+			if (this.outputColumnDefinitions.length > 0) {
+				this.outputColumnDefinitions = [];
+				this.changeDetectorRef.markForCheck();
+			}
+			return;
 		}
 
 		// Check columns length
 		if (!this._columns || !this._columns.length) {
-			// Set all column definitions
-			return this.outputColumnDefinitions = this.columnDefinitions.toArray();
+			// Get new column definitions
+			const newOutput = this.columnDefinitions.toArray();
+			
+			// Only update if changed
+			if (!this.arraysEqual(this.outputColumnDefinitions, newOutput)) {
+				this.outputColumnDefinitions = newOutput;
+				this.changeDetectorRef.markForCheck();
+			}
+			return;
 		}
 
 		// Init list
@@ -645,7 +699,7 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 		// Iterate columns
 		this._columns.forEach((column) => {
 			// Get definition
-			let def = this.columnDefinitions.find(t => t.identifier === column);
+			const def = this.columnDefinitions.find(t => t.identifier === column);
 
 			// Check if def is set
 			if (def) {
@@ -653,7 +707,23 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 			}
 		});
 
-		// Assign output
-		this.outputColumnDefinitions = output;
+		// Only assign output if it changed
+		if (!this.arraysEqual(this.outputColumnDefinitions, output)) {
+			this.outputColumnDefinitions = output;
+			this.changeDetectorRef.markForCheck();
+		}
+	}
+
+	/**
+	 * Check if two arrays of column definitions are equal
+	 * @param arr1 
+	 * @param arr2 
+	 */
+	private arraysEqual(arr1: TableColumnDefinitionDirective[], arr2: TableColumnDefinitionDirective[]): boolean {
+		if (arr1.length !== arr2.length) {
+			return false;
+		}
+		
+		return arr1.every((item, index) => item === arr2[index]);
 	}
 }
