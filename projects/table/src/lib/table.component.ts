@@ -25,10 +25,10 @@ import { TableEmptyDefinitionDirective } from "./directives/empty/empty-definiti
 import { TableHeaderComponent } from "./components/header/header.component";
 
 @Component({
-    selector: "ngx-table",
-    templateUrl: "./table.component.html",
-    styleUrls: ["./table.component.scss"],
-    standalone: false
+	selector: "ngx-table",
+	templateUrl: "./table.component.html",
+	styleUrls: ["./table.component.scss"],
+	standalone: false
 })
 export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, DoCheck {
 
@@ -365,7 +365,7 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 		// Check for double click
 		if (!this._config.allowRowDoubleClick) {
 			// Emit row click event and do nothing else
-			return this.rowClick.emit({ item, index });
+			return this.rowClick.emit({ item, index, event: event as MouseEvent });
 		}
 
 		// Set new timer to emit the click
@@ -374,7 +374,7 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 			if (!this.clickTimer) return;
 
 			// Emit row click
-			this.rowClick.emit({ item, index });
+			this.rowClick.emit({ item, index, event: event as MouseEvent });
 		}, this._config.doubleClickSafetyTimeout);
 	}
 
@@ -396,7 +396,7 @@ export class TableComponent implements AfterContentChecked, OnInit, OnDestroy, D
 		this.clickTimer = undefined;
 
 		// Emit row double click event
-		this.rowDoubleClick.emit({ item, index });
+		this.rowDoubleClick.emit({ item, index, event: event as MouseEvent });
 	}
 
 	/**

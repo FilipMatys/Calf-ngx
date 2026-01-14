@@ -2,4 +2,5 @@
 export interface IRowClickEvent<T> {
     item: T;
     index: number;
+    event: MouseEvent;
 }
