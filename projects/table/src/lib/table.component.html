@@ -1,43 +1,43 @@
 <thead #head>
     <tr class="ngx-table-row ngx-table-row--header">
-        <ng-container *ngFor="let cDef of outputColumnDefinitions; trackBy: trackByColumn">
+        @for (cDef of outputColumnDefinitions; track trackByColumn($index, cDef)) {
             <ng-container *ngTemplateOutlet="cDef.header"></ng-container>
-        </ng-container>
+        }
     </tr>
 </thead>
-<ng-container *ngIf="(items || []).length; else empty">
+@if ((items || []).length) {
     <tbody>
-        <ng-container *ngFor="let item of items; let idx = index; trackBy: trackByItem">
+        @for (item of items; track trackByItem($index, item); let idx = $index) {
             <tr class="ngx-table-row ngx-table-row--data" [class.ngx-table-row--even]="!((idx + startNode) % 2)" [class.ngx-table-row--odd]="(idx + startNode) % 2" (click)="onRowClick($event, item, idx + startNode)" (dblclick)="onRowDoubleClick($event, item, idx + startNode)">
-                <ng-container *ngFor="let cDef of outputColumnDefinitions; let columnIndex = index; trackBy: trackByColumn">
+                @for (cDef of outputColumnDefinitions; track trackByColumn($index, cDef); let columnIndex = $index) {
                     <ng-container *ngTemplateOutlet="cDef.cell; context: { $implicit: item, index: idx + startNode, columnIndex: columnIndex }">
                     </ng-container>
-                </ng-container>
+                }
             </tr>
-            <ng-container *ngIf="expansionDefinition">
+            @if (expansionDefinition) {
                 <ng-container *ngTemplateOutlet="expansionDefinition; context: { $implicit: item, index: idx + startNode }">
                 </ng-container>
-            </ng-container>
-        </ng-container>
+            }
+        }
     </tbody>
-    <tfoot *ngIf="hasFooterDefinition" #foot>
-        <tr class="ngx-table-row ngx-table-row--footer">
-            <ng-container *ngFor="let cDef of outputColumnDefinitions; trackBy: trackByColumn">
-                <ng-container *ngIf="cDef.footer; else defaultFooterTemplate">
-                    <ng-container *ngTemplateOutlet="cDef.footer"></ng-container>
-                </ng-container>
-                <ng-template #defaultFooterTemplate>
-                    <td class="ngx-table-footer"></td>
-                </ng-template>
-            </ng-container>
-        </tr>
-    </tfoot>
-</ng-container>
-<ng-template #empty>
+    @if (hasFooterDefinition) {
+        <tfoot #foot>
+            <tr class="ngx-table-row ngx-table-row--footer">
+                @for (cDef of outputColumnDefinitions; track trackByColumn($index, cDef)) {
+                    @if (cDef.footer) {
+                        <ng-container *ngTemplateOutlet="cDef.footer"></ng-container>
+                    } @else {
+                        <td class="ngx-table-footer"></td>
+                    }
+                }
+            </tr>
+        </tfoot>
+    }
+} @else {
     <tbody>
-        <ng-container *ngIf="emptyDefinition">
+        @if (emptyDefinition) {
             <ng-container *ngTemplateOutlet="emptyDefinition; context: { numberOfColumns: outputColumnDefinitions.length }">
             </ng-container>
-        </ng-container>
+        }
     </tbody>
-</ng-template>
+}
