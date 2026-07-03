@@ -9,7 +9,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:prod:tooltip": "ng build tooltip --configuration=production",
-    "build:prod:table": "ng build table --configuration=production"
+    "build:prod:table": "ng build table --configuration=production",
+    "build:prod:tabs": "ng build tabs --configuration=production"
   },
   "private": true,
   "dependencies": {

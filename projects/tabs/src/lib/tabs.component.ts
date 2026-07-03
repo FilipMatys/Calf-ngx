@@ -1,19 +1,22 @@
 // External modules
-import { Component, ContentChildren, QueryList, AfterContentInit, Input, HostBinding, EventEmitter, Output } from '@angular/core';
+import { Component, ContentChildren, QueryList, AfterContentInit, OnDestroy, Input, HostBinding, EventEmitter, Output } from "@angular/core";
+import { Subscription } from "rxjs";
 
 // Directives
 import { TabDirective } from "./directives/tab/tab.directive";
+
+// Interfaces
 import { IActiveTabChangeEvent } from "./interfaces/active-tab-change-event.interface";
 
 // Outlets
 import { TabContentOutlet } from "./outlets/content/content.outlet";
 
 @Component({
-    selector: 'ngx-tabs',
-    templateUrl: "./tabs.component.html",
-    standalone: false
+	selector: "ngx-tabs",
+	templateUrl: "./tabs.component.html",
+	standalone: false
 })
-export class TabsComponent implements AfterContentInit {
+export class TabsComponent implements AfterContentInit, OnDestroy {
 
 	@HostBinding("class.ngx-tabs")
 	public ngxTabs: boolean = true;
@@ -31,7 +34,10 @@ export class TabsComponent implements AfterContentInit {
 	}
 
 	// Tab identifiers
-	private _tabIdentifiers: string[];
+	private _tabIdentifiers!: string[];
+
+	// Tab definitions changes subscription
+	private tabDefinitionsChangesSubscription!: Subscription;
 
 	// Active index
 	@Input("index")
@@ -48,6 +54,12 @@ export class TabsComponent implements AfterContentInit {
 			this._activeIndex = index;
 
 			// Do nothing else
+			return;
+		}
+
+		// Check if index is valid
+		if (index < 0 || index >= this.tabs.length) {
+			// Do nothing
 			return;
 		}
 
@@ -70,11 +82,11 @@ export class TabsComponent implements AfterContentInit {
 
 	// Content outlet
 	@Input("outlet")
-	public contentOutlet: TabContentOutlet;
+	public contentOutlet!: TabContentOutlet;
 
 	// List of tab definitions
 	@ContentChildren(TabDirective)
-	public tabDefinitions: QueryList<TabDirective>;
+	public tabDefinitions!: QueryList<TabDirective>;
 
 	// List of tabs
 	public tabs: TabDirective[] = [];
@@ -84,7 +96,18 @@ export class TabsComponent implements AfterContentInit {
 	 */
 	public ngAfterContentInit() {
 		// Rebuild
-		Promise.resolve(null).then(() => this.rebuild());
+		this.rebuild();
+
+		// Rebuild whenever the projected tabs change
+		this.tabDefinitionsChangesSubscription = this.tabDefinitions.changes.subscribe(() => this.rebuild());
+	}
+
+	/**
+	 * On destroy hook
+	 */
+	public ngOnDestroy(): void {
+		// Clean up subscription
+		this.tabDefinitionsChangesSubscription && this.tabDefinitionsChangesSubscription.unsubscribe();
 	}
 
 	/**
@@ -98,10 +121,7 @@ export class TabsComponent implements AfterContentInit {
 		event.stopPropagation();
 
 		// Activate tab
-		this.activateTab(tab, index);
-
-		// Emit change
-		this.activeIndexChange.next(index);
+		this.activateTab(tab, index, true);
 	}
 
 	/**
@@ -109,17 +129,29 @@ export class TabsComponent implements AfterContentInit {
 	 * @param tab 
 	 * @param index 
 	 */
-	private async activateTab(tab: TabDirective, index: number): Promise<void> {
+	private activateTab(tab: TabDirective, index: number, emitIndexChange: boolean = false): boolean {
+		// Check if tab is valid
+		if (!tab) {
+			// Do nothing
+			return false;
+		}
+
 		// Check if tab is disabled
 		if (tab.isDisabled) {
 			// Do nothing
-			return;
+			return false;
 		}
 
 		// Check if selected index is the same 
 		if (this._activeIndex === index) {
 			// Do nothing
-			return;
+			return false;
+		}
+
+		// Check if index is valid
+		if (index < 0) {
+			// Do nothing
+			return false;
 		}
 
 		// Keep from index
@@ -130,8 +162,19 @@ export class TabsComponent implements AfterContentInit {
 
 		// Check if outlet is set
 		if (!this.contentOutlet) {
-			// Nothing to do
-			return;
+			// Emit change without updating the outlet
+			this.activeTabChange.emit({
+				fromIndex: fromIndex,
+				fromTab: this.tabDefinitions.find((_, tIndex) => tIndex === fromIndex),
+				toIndex: index,
+				toTab: tab
+			});
+
+			// Emit index change if requested
+			emitIndexChange && this.activeIndexChange.next(index);
+
+			// Nothing else to do
+			return true;
 		}
 
 		// Get content view ref
@@ -150,6 +193,11 @@ export class TabsComponent implements AfterContentInit {
 			toIndex: index,
 			toTab: tab
 		});
+
+		// Emit index change if requested
+		emitIndexChange && this.activeIndexChange.next(index);
+
+		return true;
 	}
 
 	/**
@@ -161,20 +209,27 @@ export class TabsComponent implements AfterContentInit {
 			return;
 		}
 
+		// Get tab definitions
+		const tabDefinitions = this.tabDefinitions.toArray();
+
 		// Reset tabs
 		this.tabs = [];
 
 		// Check if tab identifiers are set
 		if (this._tabIdentifiers) {
 			// Add tab definitions based on identifiers
-			this._tabIdentifiers.forEach((identifier) => {
-				// Add tab to list
-				this.tabs.push(this.tabDefinitions.find(td => td.name === identifier));
-			});
+			this.tabs = this._tabIdentifiers
+				.map((identifier) => tabDefinitions.find(td => td.name === identifier))
+				.filter((tab): tab is TabDirective => !!tab);
 		}
 		else {
 			// Assign tab definitions
-			this.tabs = this.tabDefinitions.toArray();
+			this.tabs = tabDefinitions;
+		}
+
+		// Normalize active index
+		if (this.tabs.length && (this._activeIndex < 0 || this._activeIndex >= this.tabs.length)) {
+			this._activeIndex = 0;
 		}
 
 		// Check if outlet is set
@@ -195,7 +250,8 @@ export class TabsComponent implements AfterContentInit {
 		}
 
 		// Get tab content
-		const content = this.tabs[this._activeIndex].content;
+		const activeTab = this.tabs[this._activeIndex];
+		const content = activeTab && activeTab.content;
 
 		// Create view
 		content && cVRef.createEmbeddedView(content);

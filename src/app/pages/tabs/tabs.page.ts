@@ -5,7 +5,8 @@ import { IActiveTabChangeEvent } from "tabs";
 @Component({
     selector: "page-tabs",
     templateUrl: "./tabs.page.html",
-    styleUrls: ["./tabs.page.scss"]
+    styleUrls: ["./tabs.page.scss"],
+    standalone: false
 })
 export class TabsPage {
 
