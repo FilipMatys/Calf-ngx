@@ -85,7 +85,19 @@ export class TabsComponent implements AfterContentInit, OnDestroy {
 
 	// Content outlet
 	@Input("outlet")
-	public contentOutlet!: TabContentOutlet;
+	public set contentOutlet(outlet: TabContentOutlet) {
+		// Assign content outlet
+		this._contentOutlet = outlet;
+
+		// Rebuild tabs
+		this.rebuild();
+	}
+
+	public get contentOutlet(): TabContentOutlet {
+		return this._contentOutlet;
+	}
+
+	private _contentOutlet!: TabContentOutlet;
 
 	// List of tab definitions
 	@ContentChildren(TabDirective)
@@ -132,8 +144,8 @@ export class TabsComponent implements AfterContentInit, OnDestroy {
 	 * @param index 
 	 * @param tab 
 	 */
-	public trackByTab(index: number, tab: TabDirective): string {
-		return tab.name;
+	public trackByTab(index: number, tab: TabDirective): TabDirective {
+		return tab;
 	}
 
 	/**
