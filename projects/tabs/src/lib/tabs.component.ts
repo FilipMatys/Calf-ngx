@@ -80,6 +80,9 @@ export class TabsComponent implements AfterContentInit, OnDestroy {
 	// Active index
 	private _activeIndex: number = 0;
 
+	// Active tab
+	private _activeTab: TabDirective | null = null;
+
 	// Content outlet
 	@Input("outlet")
 	public contentOutlet!: TabContentOutlet;
@@ -125,6 +128,15 @@ export class TabsComponent implements AfterContentInit, OnDestroy {
 	}
 
 	/**
+	 * Track tab instances in the template
+	 * @param index 
+	 * @param tab 
+	 */
+	public trackByTab(index: number, tab: TabDirective): string {
+		return tab.name;
+	}
+
+	/**
 	 * Activate tab
 	 * @param tab 
 	 * @param index 
@@ -156,16 +168,18 @@ export class TabsComponent implements AfterContentInit, OnDestroy {
 
 		// Keep from index
 		const fromIndex = this._activeIndex;
+		const fromTab = this._activeTab || undefined;
 
 		// Set active index
 		this._activeIndex = index;
+		this._activeTab = tab;
 
 		// Check if outlet is set
 		if (!this.contentOutlet) {
 			// Emit change without updating the outlet
 			this.activeTabChange.emit({
 				fromIndex: fromIndex,
-				fromTab: this.tabDefinitions.find((_, tIndex) => tIndex === fromIndex),
+				fromTab: fromTab,
 				toIndex: index,
 				toTab: tab
 			});
@@ -189,7 +203,7 @@ export class TabsComponent implements AfterContentInit, OnDestroy {
 		// Emit change
 		this.activeTabChange.emit({
 			fromIndex: fromIndex,
-			fromTab: this.tabDefinitions.find((_, tIndex) => tIndex === fromIndex),
+			fromTab: fromTab,
 			toIndex: index,
 			toTab: tab
 		});
@@ -197,6 +211,7 @@ export class TabsComponent implements AfterContentInit, OnDestroy {
 		// Emit index change if requested
 		emitIndexChange && this.activeIndexChange.next(index);
 
+		// Return true
 		return true;
 	}
 
@@ -232,6 +247,9 @@ export class TabsComponent implements AfterContentInit, OnDestroy {
 			this._activeIndex = 0;
 		}
 
+		// Cache active tab
+		this._activeTab = this.tabs[this._activeIndex] || null;
+
 		// Check if outlet is set
 		if (!this.contentOutlet) {
 			// Nothing to do
@@ -250,8 +268,7 @@ export class TabsComponent implements AfterContentInit, OnDestroy {
 		}
 
 		// Get tab content
-		const activeTab = this.tabs[this._activeIndex];
-		const content = activeTab && activeTab.content;
+		const content = this._activeTab && this._activeTab.content;
 
 		// Create view
 		content && cVRef.createEmbeddedView(content);
