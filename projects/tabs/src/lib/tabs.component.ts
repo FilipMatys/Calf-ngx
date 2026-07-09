@@ -85,19 +85,7 @@ export class TabsComponent implements AfterContentInit, OnDestroy {
 
 	// Content outlet
 	@Input("outlet")
-	public set contentOutlet(outlet: TabContentOutlet) {
-		// Assign content outlet
-		this._contentOutlet = outlet;
-
-		// Rebuild tabs
-		this.rebuild();
-	}
-
-	public get contentOutlet(): TabContentOutlet {
-		return this._contentOutlet;
-	}
-
-	private _contentOutlet!: TabContentOutlet;
+	public contentOutlet!: TabContentOutlet;
 
 	// List of tab definitions
 	@ContentChildren(TabDirective)
@@ -210,7 +198,13 @@ export class TabsComponent implements AfterContentInit, OnDestroy {
 		cVRef.clear();
 
 		// Create view for given tab if content is set
-		tab.content && cVRef.createEmbeddedView(tab.content);
+		if (tab.content) {
+			// Create content
+			const contentViewRef = cVRef.createEmbeddedView(tab.content);
+
+			// Detect changes
+			contentViewRef.detectChanges();
+		}
 
 		// Emit change
 		this.activeTabChange.emit({
@@ -283,6 +277,12 @@ export class TabsComponent implements AfterContentInit, OnDestroy {
 		const content = this._activeTab && this._activeTab.content;
 
 		// Create view
-		content && cVRef.createEmbeddedView(content);
+		if (content) {
+			// Create content
+			const contentViewRef = cVRef.createEmbeddedView(content);
+
+			// Detect changes
+			contentViewRef.detectChanges();
+		}
 	}
 }
